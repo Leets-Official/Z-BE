@@ -1,0 +1,25 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: xclone-dev-cd
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/xclone
+            sudo ./deploy.sh
+
