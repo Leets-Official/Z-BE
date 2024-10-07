@@ -37,6 +37,14 @@ public class ApiData<T> {
     return ResponseEntity.ok(apiData);
   }
 
+  public static <T> ResponseEntity<ApiData<T>> created(T data) {
+    ApiData<T> apiData = ApiData.<T>builder()
+        .success(true)
+        .data(data)
+        .build();
+    return ResponseEntity.status(HttpStatus.CREATED).body(apiData);
+  }
+
   public static <T> ResponseEntity<ApiData<T>> validationFailure(List<FieldError> fieldErrors) {
     Map<String, String> errors = new HashMap<>();
     fieldErrors.forEach(
