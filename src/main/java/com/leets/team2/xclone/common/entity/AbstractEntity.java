@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public abstract class BaseTimeEntity {
+public abstract class AbstractEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
