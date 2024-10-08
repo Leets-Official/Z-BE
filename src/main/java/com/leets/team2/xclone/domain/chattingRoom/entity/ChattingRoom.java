@@ -5,11 +5,6 @@ import com.leets.team2.xclone.domain.member.entities.Member;
 import jakarta.persistence.*;
 
 public class ChattingRoom extends AbstractEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chatting_room_id")
-    private Long id;
-
     @ManyToOne
     @JoinColumn(name = "member1_id")
     private Member member1;
