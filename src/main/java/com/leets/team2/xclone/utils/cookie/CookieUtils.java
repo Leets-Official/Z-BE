@@ -2,6 +2,10 @@ package com.leets.team2.xclone.utils.cookie;
 
 import com.leets.team2.xclone.common.ApiData;
 import com.leets.team2.xclone.config.ConfigProperties;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -27,24 +31,37 @@ public class CookieUtils {
     this.sameSite = configProperties.getCookieSameSite();
   }
 
-  public <T> void addCookie(String value, CookieSettings cookieName,
-      CookieMaxAge maxAge, ResponseEntity<ApiData<T>> response) {
-    BodyBuilder bodyBuilder = ResponseEntity.status(response.getStatusCode());
-    bodyBuilder.header(HttpHeaders.COOKIE,
-        generate(cookieName.getName(), value, maxAge.getMaxAge()).toString());
+  public ResponseCookie addCookie(String value, CookieSettings cookieName, CookieMaxAge maxAge) {
+     return generate(cookieName.getName(), value, maxAge.getMaxAge());
   }
 
   public ResponseCookie deleteCookie(CookieSettings cookieName) {
     return generate(cookieName.getName(), null, 0);
   }
 
+  public String getCookieValue(CookieSettings cookieName, HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+    for (Cookie cookie : cookies) {
+      if (cookie.getName().equals(cookieName.getName())) {
+        return cookie.getValue();
+      }
+    }
+    return null;
+  }
+
+  public <T> ResponseEntity<ApiData<T>> addCookiesToResponse(ResponseEntity<ApiData<T>> response, List<ResponseCookie> cookies) {
+    BodyBuilder bodyBuilder = ResponseEntity.status(response.getStatusCode());
+    cookies.forEach(cookie -> bodyBuilder.header(HttpHeaders.SET_COOKIE, cookie.toString()));
+    return bodyBuilder.body(response.getBody());
+  }
+
   private ResponseCookie generate(String cookieName, String value, long maxAge) {
     return ResponseCookie.from(cookieName, value)
         .httpOnly(true)
         .secure(this.cookieSecure)
-        .domain(this.cookieDomain)
         .path(this.cookiePath)
         .sameSite(this.sameSite)
+        .domain(this.cookieDomain)
         .maxAge(maxAge)
         .build();
   }
