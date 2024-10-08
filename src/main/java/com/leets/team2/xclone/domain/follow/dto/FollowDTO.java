@@ -7,7 +7,8 @@ public class FollowDTO {
 
     @Builder
     public record Save(
-            @NotNull String tag
+            @NotNull(message = "Tag는 필수 값입니다.")
+            String tag
     ){}
 
     @Builder
