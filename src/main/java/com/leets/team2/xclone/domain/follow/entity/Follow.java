@@ -8,12 +8,12 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Getter
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-@SuperBuilder
+@Entity
+@Table(name = "follow")
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Slf4j
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class Follow extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "follower_id")
