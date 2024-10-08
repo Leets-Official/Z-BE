@@ -4,14 +4,16 @@ import com.leets.team2.xclone.common.entity.AbstractEntity;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@Entity
 @Getter
-@Table
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
 public class Follow extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
