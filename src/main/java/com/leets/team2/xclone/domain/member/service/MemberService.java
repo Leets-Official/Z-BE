@@ -20,4 +20,12 @@ public class MemberService {
     return this.memberRepository.findByNicknameAndKakaoId(nickname, kakaoId).orElseThrow(
         NoSuchMemberException::new);
   }
+
+  public void saveMember(Member member) {
+    this.memberRepository.save(member);
+  }
+
+  public boolean checkMemberExistsBy(String tag) {
+    return this.memberRepository.existsByTag(tag);
+  }
 }
