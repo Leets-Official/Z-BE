@@ -33,4 +33,7 @@ public class Member extends AbstractEntity {
 
   @Column(name = "introduction", nullable = true)
   private String introduction;
+
+  @Column(name = "kakao_id", nullable = false)
+  private Long kakaoId;
 }

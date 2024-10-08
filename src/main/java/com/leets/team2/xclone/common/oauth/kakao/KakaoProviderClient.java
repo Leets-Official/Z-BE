@@ -2,8 +2,8 @@ package com.leets.team2.xclone.common.oauth.kakao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leets.team2.xclone.domain.member.dto.responses.KakaoInfo;
-import com.leets.team2.xclone.domain.member.dto.responses.OAuth2ProviderResponse;
+import com.leets.team2.xclone.domain.auth.dto.response.KakaoInfo;
+import com.leets.team2.xclone.domain.auth.dto.response.OAuth2ProviderResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
