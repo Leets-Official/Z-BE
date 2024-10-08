@@ -9,4 +9,8 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
   private final MemberRepository memberRepository;
+
+  public boolean checkMemberExistsBy(String nickname, Long kakaoId) {
+    return this.memberRepository.existsByNicknameAndKakaoId(nickname, kakaoId);
+  }
 }
