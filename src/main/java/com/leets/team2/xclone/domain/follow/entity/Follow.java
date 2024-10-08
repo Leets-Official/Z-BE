@@ -15,11 +15,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Follow extends AbstractEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "follow_id")
-    private Long id;
-
     @ManyToOne
     @JoinColumn(name = "follower_id")
     private Member follower;    // 팔로잉 하는 멤버
