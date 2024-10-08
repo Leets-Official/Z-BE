@@ -19,9 +19,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Member extends AbstractEntity {
 
-  @Column(name = "phone_number", nullable = false)
-  private String phoneNumber;
-
   @Column(name = "birth_date", nullable = true)
   private LocalDateTime birthDate;
 
