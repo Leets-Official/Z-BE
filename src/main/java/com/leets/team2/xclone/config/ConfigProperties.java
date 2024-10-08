@@ -12,4 +12,12 @@ import org.springframework.stereotype.Component;
 public class ConfigProperties {
 
   private String baseUrl;
+  private String registerRedirectUrl;
+
+  private boolean cookieSecure;
+  private String cookieDomain;
+  private String cookiePath;
+  private String cookieSameSite;
+  private String accessTokenMaxAge;
+  private String refreshTokenMaxAge;
 }
