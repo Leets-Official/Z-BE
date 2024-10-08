@@ -1,4 +1,4 @@
-package com.leets.team2.xclone.domain.member.dto.responses;
+package com.leets.team2.xclone.domain.auth.dto.response;
 
 public record OAuth2ProviderResponse(
     String access_token,

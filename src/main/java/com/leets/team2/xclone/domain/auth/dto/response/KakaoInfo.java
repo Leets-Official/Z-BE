@@ -1,4 +1,4 @@
-package com.leets.team2.xclone.domain.member.dto.responses;
+package com.leets.team2.xclone.domain.auth.dto.response;
 
 import com.leets.team2.xclone.common.oauth.kakao.infos.KakaoAccount;
 import com.leets.team2.xclone.common.oauth.kakao.infos.Properties;
