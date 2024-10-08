@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @Controller
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -81,7 +83,6 @@ public class AuthControllerImpl implements AuthController {
         registerPostRequest.birthDate(),
         Long.valueOf(this.cookieUtils.getCookieValue(CookieSettings.KAKAO_ID, httpServletRequest))
     );
-
     ResponseEntity<ApiData<RegisterPostResponse>> responseData = ApiData.created(registerPostResponse);
 
     JwtWrapper jwtWrapper = this.authService.generateJwt(registerPostRequest.tag());
