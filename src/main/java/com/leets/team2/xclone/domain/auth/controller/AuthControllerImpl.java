@@ -6,6 +6,10 @@ import com.leets.team2.xclone.common.oauth.kakao.KakaoURLBuilder;
 import com.leets.team2.xclone.domain.auth.dto.response.OAuthLoginResponse;
 import com.leets.team2.xclone.domain.auth.service.AuthService;
 import com.leets.team2.xclone.domain.auth.dto.response.KakaoInfo;
+import com.leets.team2.xclone.utils.cookie.CookieMaxAge;
+import com.leets.team2.xclone.utils.cookie.CookieSettings;
+import com.leets.team2.xclone.utils.cookie.CookieUtils;
+import com.leets.team2.xclone.utils.jwt.JwtWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,7 @@ public class AuthControllerImpl implements AuthController {
 
   private final AuthService authService;
   private final KakaoURLBuilder kakaoURLBuilder;
+  private final CookieUtils cookieUtils;
 
   @Override
   @GetMapping("/kakao")
@@ -38,8 +43,17 @@ public class AuthControllerImpl implements AuthController {
   ) throws JsonProcessingException {
     KakaoInfo kakaoInfo = this.authService.getMemberInfoFromKakao(code);
 
-    return ApiData.ok(
-        this.authService.oauthLogin(kakaoInfo)
-    );
+    OAuthLoginResponse oAuthLoginResponse = this.authService.oauthLogin(kakaoInfo);
+    ResponseEntity<ApiData<OAuthLoginResponse>> responseData = ApiData.ok(oAuthLoginResponse);
+
+    if (!oAuthLoginResponse.requiredRegister()) {
+      JwtWrapper jwtWrapper = this.authService.generateJwt(kakaoInfo.properties().nickname(), kakaoInfo.id());
+      this.cookieUtils.addCookie(jwtWrapper.accessToken(), CookieSettings.ACCESS_TOKEN,
+          CookieMaxAge.HALF_HOUR, responseData);
+      this.cookieUtils.addCookie(jwtWrapper.refreshToken(), CookieSettings.REFRESH_TOKEN,
+          CookieMaxAge.ONE_DAY, responseData);
+    }
+
+    return responseData;
   }
 }
