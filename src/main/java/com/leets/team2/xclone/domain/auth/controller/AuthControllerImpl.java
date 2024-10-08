@@ -56,6 +56,7 @@ public class AuthControllerImpl implements AuthController {
     ResponseEntity<ApiData<OAuthLoginResponse>> responseData = ApiData.ok(oAuthLoginResponse);
 
     List<ResponseCookie> cookies = new ArrayList<>();
+    // 최초 로그인이 아니라면 바로 로그인 되도록 JWT 쿠키에 응답
     if (!oAuthLoginResponse.requiredRegister()) {
       JwtWrapper jwtWrapper = this.authService.generateJwt(kakaoInfo.properties().nickname(), kakaoInfo.id());
       cookies.add(this.cookieUtils.addCookie(jwtWrapper.accessToken(), CookieSettings.ACCESS_TOKEN,
@@ -63,7 +64,9 @@ public class AuthControllerImpl implements AuthController {
       cookies.add(
           this.cookieUtils.addCookie(jwtWrapper.refreshToken(), CookieSettings.REFRESH_TOKEN,
               CookieMaxAge.ONE_DAY));
-    } else {
+    }
+    // 최초 로그인이라면 kakaoId를 쿠키에 담아 응답 -> 회원가입 시 필요하므로
+    else {
       cookies.add(this.cookieUtils.addCookie(String.valueOf(kakaoInfo.id()), CookieSettings.KAKAO_ID,
               CookieMaxAge.HALF_HOUR));
     }
@@ -85,6 +88,7 @@ public class AuthControllerImpl implements AuthController {
     );
     ResponseEntity<ApiData<RegisterPostResponse>> responseData = ApiData.created(registerPostResponse);
 
+    // 회원가입 완료시 JWT 발급하여 쿠키로 응답
     JwtWrapper jwtWrapper = this.authService.generateJwt(registerPostRequest.tag());
     List<ResponseCookie> cookies = new ArrayList<>();
     cookies.add(this.cookieUtils.addCookie(jwtWrapper.accessToken(), CookieSettings.ACCESS_TOKEN,
@@ -92,6 +96,7 @@ public class AuthControllerImpl implements AuthController {
     cookies.add(this.cookieUtils.addCookie(jwtWrapper.refreshToken(), CookieSettings.REFRESH_TOKEN,
         CookieMaxAge.ONE_DAY));
 
+    // 회원가입시 사용된 kakaoId 쿠키는 삭제
     cookies.add(this.cookieUtils.deleteCookie(CookieSettings.KAKAO_ID));
 
     return this.cookieUtils.addCookiesToResponse(responseData, cookies);

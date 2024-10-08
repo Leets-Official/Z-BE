@@ -49,6 +49,7 @@ public class CookieUtils {
   }
 
   public <T> ResponseEntity<ApiData<T>> addCookiesToResponse(ResponseEntity<ApiData<T>> response, List<ResponseCookie> cookies) {
+    // ResponseEntity 헤더에 Set-Cookie 헤더 추가
     BodyBuilder bodyBuilder = ResponseEntity.status(response.getStatusCode());
     cookies.forEach(cookie -> bodyBuilder.header(HttpHeaders.SET_COOKIE, cookie.toString()));
     return bodyBuilder.body(response.getBody());
