@@ -10,6 +10,6 @@ import lombok.*;
 @Setter
 public class RequestFollowDTO {
     @NotBlank
-    private Long followingTarget;
+    private String tag;
     
 }
