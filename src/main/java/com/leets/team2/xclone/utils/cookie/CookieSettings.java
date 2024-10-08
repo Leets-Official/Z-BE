@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum CookieSettings {
 
   ACCESS_TOKEN("accessToken"),
-  REFRESH_TOKEN ("refreshToken");
+  REFRESH_TOKEN ("refreshToken"),
+  KAKAO_ID("kakaoId");
 
   private final String name;
 
