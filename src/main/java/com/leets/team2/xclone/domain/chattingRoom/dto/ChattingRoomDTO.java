@@ -7,7 +7,8 @@ public class ChattingRoomDTO {
 
     @Builder
     public record Save(
-            @NotNull String chatMemberTag
+            @NotNull(message = "chatMemberTag는 필수 값입니다.")
+            String chatMemberTag
     ){}
 
     @Builder
