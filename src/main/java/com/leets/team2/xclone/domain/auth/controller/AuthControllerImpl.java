@@ -3,8 +3,9 @@ package com.leets.team2.xclone.domain.auth.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.leets.team2.xclone.common.ApiData;
 import com.leets.team2.xclone.common.oauth.kakao.KakaoURLBuilder;
+import com.leets.team2.xclone.domain.auth.dto.response.OAuthLoginResponse;
 import com.leets.team2.xclone.domain.auth.service.AuthService;
-import com.leets.team2.xclone.domain.member.dto.responses.KakaoInfo;
+import com.leets.team2.xclone.domain.auth.dto.response.KakaoInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,13 @@ public class AuthControllerImpl implements AuthController {
   }
 
   @GetMapping("/kakao/redirect")
-  public ResponseEntity<ApiData<String>> getRedirect(
+  public ResponseEntity<ApiData<OAuthLoginResponse>> getRedirect(
       @RequestParam String code
   ) throws JsonProcessingException {
     KakaoInfo kakaoInfo = this.authService.getMemberInfoFromKakao(code);
 
-    return null;
+    return ApiData.ok(
+        this.authService.oauthLogin(kakaoInfo)
+    );
   }
 }
