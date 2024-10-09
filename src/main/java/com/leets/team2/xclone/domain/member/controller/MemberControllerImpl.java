@@ -22,7 +22,7 @@ public class MemberControllerImpl implements MemberController{
   @Override
   @GetMapping("/tag/is-duplication")
   public ResponseEntity<ApiData<CheckTagDuplicationGetResponse>> getCheckTagDuplication(
-      @RequestBody @Valid CheckTagDuplicationGetRequest request) {
+      @ModelAttribute @Valid CheckTagDuplicationGetRequest request) {
     return ApiData.ok(
         CheckTagDuplicationGetResponse.of(this.memberService.checkMemberExistsBy(request.tag()))
     );
