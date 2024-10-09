@@ -24,6 +24,4 @@ public class Post extends AbstractEntity {//정말 기본적인 부분들만 일
     @JoinColumn(name="member_id",nullable = false)
     private Member member;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
