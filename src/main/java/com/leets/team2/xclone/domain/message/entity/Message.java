@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class message extends AbstractEntity {
+public class Message extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member sentUser;

@@ -1,12 +1,11 @@
 package com.leets.team2.xclone.domain.message.dto;
 
-import com.leets.team2.xclone.domain.message.entity.message;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-public class messageDTO {
+public class MessageDTO {
 
     @Builder
     public record Save(
