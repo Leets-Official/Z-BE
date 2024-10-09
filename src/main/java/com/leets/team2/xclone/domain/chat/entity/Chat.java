@@ -1,4 +1,4 @@
-package com.leets.team2.xclone.domain.message.entity;
+package com.leets.team2.xclone.domain.chat.entity;
 
 import com.leets.team2.xclone.common.entity.AbstractEntity;
 import com.leets.team2.xclone.domain.chattingRoom.entity.ChattingRoom;
@@ -7,12 +7,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "message")
+@Table(name = "chat")
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class Message extends AbstractEntity {
+public class Chat extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member sentUser;

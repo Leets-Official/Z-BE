@@ -1,12 +1,12 @@
-package com.leets.team2.xclone.domain.message.dto;
+package com.leets.team2.xclone.domain.chat.dto;
 
 import java.time.LocalDateTime;
 
-public record ResponseMessageDTO (
+public record ResponseChatDTO(
         Long id,
         String nickname,
         String tag,
-        String message,
+        String content,
         Boolean seen,
         LocalDateTime sentAt
 ){
