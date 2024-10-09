@@ -28,7 +28,7 @@ public class message extends AbstractEntity {
 
     @PrePersist
     public void prePersist() {
-        seen = false;
+        seen = false;   // 읽음 false
     }
 
 }
