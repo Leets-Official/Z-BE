@@ -24,11 +24,6 @@ public class Message extends AbstractEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private Boolean seen;
-
-    @PrePersist
-    public void prePersist() {
-        seen = false;   // 읽음 false
-    }
-
+    @Column(nullable = false)
+    private Boolean seen = false;
 }
