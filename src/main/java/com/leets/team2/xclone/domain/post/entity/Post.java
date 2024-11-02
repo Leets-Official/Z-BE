@@ -4,6 +4,7 @@ import com.leets.team2.xclone.common.entity.AbstractEntity;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@Setter
 public class Post extends AbstractEntity {//정말 기본적인 부분들만 일단 만들어냈습니다.
     @Column(name="title",nullable = false)
     private String title;
@@ -20,8 +22,8 @@ public class Post extends AbstractEntity {//정말 기본적인 부분들만 일
     @Column(name="content",nullable = false)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name="member_id",nullable = false)
-    private Member member;
+    @ManyToOne(fetch=FetchType.LAZY)//Member랑 다대일
+    @JoinColumn(name="author_id",nullable = false)//author_id로 Member와 연결
+    private Member author;//작성자를 멤버 객체로.
 
 }

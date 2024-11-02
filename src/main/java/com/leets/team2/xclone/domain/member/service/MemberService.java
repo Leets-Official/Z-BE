@@ -6,6 +6,8 @@ import com.leets.team2.xclone.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -27,5 +29,11 @@ public class MemberService {
 
   public boolean checkMemberExistsBy(String tag) {
     return this.memberRepository.existsByTag(tag);
+  }
+
+  public Member findMemberByTag(String tag){
+    return this.memberRepository.findByTag(tag).orElseThrow(
+            ()->new NoSuchElementException("해당 테그의 멤버가 없습니다."+tag)
+    );
   }
 }
