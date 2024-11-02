@@ -33,7 +33,6 @@ public class MemberService {
 
   public Member findMemberByTag(String tag){
     return this.memberRepository.findByTag(tag).orElseThrow(
-            ()->new NoSuchElementException("해당 테그의 멤버가 없습니다."+tag)
-    );
+            NoSuchMemberException::new);
   }
 }
