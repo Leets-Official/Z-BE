@@ -20,7 +20,8 @@ public enum ErrorInfo {
 
   // follow 영역
   INVALID_FOLLOW(HttpStatus.BAD_REQUEST, "잘못된 팔로우 요청입니다.", 10201),
-  FOLLOW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 팔로우한 대상입니다", 10202);
+  FOLLOW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 팔로우한 대상입니다", 10202),
+  NO_SUCH_FOLLOW(HttpStatus.BAD_REQUEST, "팔로우하지 않은 대상입니다", 10203);
 
   private final HttpStatus statusCode;
   private final String message;
