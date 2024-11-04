@@ -6,6 +6,7 @@ import com.leets.team2.xclone.domain.post.entity.Post;
 import com.leets.team2.xclone.domain.post.repository.PostRepository;
 import com.leets.team2.xclone.exception.InvalidFileException;
 import com.leets.team2.xclone.exception.PostNotFoundException;
+import com.leets.team2.xclone.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,9 +46,14 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post updatePost(Long postId, PostDTO postDTO, MultipartFile imageFile)throws IOException{
+    public Post updatePost(Long postId, PostDTO postDTO, MultipartFile imageFile,Member currentMember)throws IOException{
         Post post=postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+
+        //현재 사용자가 게시물 작성자인지 확인
+        if(!post.getAuthor().getId().equals(currentMember.getId())){
+            throw new UnauthorizedException();
+        }
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
 
@@ -69,9 +75,14 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public void deletePost(Long postId){
-        if(!postRepository.existsById(postId)){//게시물이 없을 경우 예외 발생
-            throw new PostNotFoundException();
+    public void deletePost(Long postId,Member currentMember){
+        //게시물이 존재하지 않으면 예외발생. 작성자 정보에도 접근하기 위해 existsById에서 findById로 수정
+        Post post=postRepository.findById(postId)
+                        .orElseThrow(PostNotFoundException::new);
+
+        //현재 사용자가 게시물 작성자인지 확인
+        if(!post.getAuthor().getId().equals(currentMember.getId())){
+            throw new UnauthorizedException();
         }
         postRepository.deleteById(postId);//해당 게시물 아이디의 게시물 삭제
     }

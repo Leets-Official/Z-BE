@@ -19,6 +19,8 @@ public enum ErrorInfo {
 
   INVALID_FILE(HttpStatus.BAD_REQUEST,"png 형식만 가능합니다.",10004),
 
+  UNAUTHORIZED(HttpStatus.FORBIDDEN,"권한이 없습니다.",10005),//권한 인증 실패의 경우, 게시물 수정, 삭제 시 예외처리
+
   // jwt 영역
   INVALID_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다.", 10100);
 

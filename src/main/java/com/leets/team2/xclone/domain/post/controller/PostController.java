@@ -37,8 +37,10 @@ public class PostController {
 
     @PatchMapping("/{postId}/edit")
     public ResponseEntity<ApiData<PostDTO>> updatePost(@PathVariable Long postId,@RequestBody @Validated PostDTO postDTO,
-                                                       @RequestPart(value="image",required = false)MultipartFile imageFile) throws IOException{
-        Post updatedPost=postService.updatePost(postId,postDTO,imageFile);
+                                                       @RequestPart(value="image",required = false)MultipartFile imageFile,
+                                                       @RequestParam String currentMemberTag) throws IOException{
+        Member currentMember=memberService.findMemberByTag(currentMemberTag);
+        Post updatedPost=postService.updatePost(postId,postDTO,imageFile,currentMember);
         return ApiData.ok(new PostDTO(
                 updatedPost.getId(),
                 updatedPost.getTitle(),
@@ -48,8 +50,10 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}/delete")
-    public ResponseEntity<ApiData<Void>> deletePost(@PathVariable Long postId){
-        postService.deletePost(postId);
+    public ResponseEntity<ApiData<Void>> deletePost(@PathVariable Long postId,
+                                                    @RequestParam String currentMemberTag){
+        Member currentMember=memberService.findMemberByTag(currentMemberTag);
+        postService.deletePost(postId,currentMember);
         return ApiData.ok(null);
     }
 }
