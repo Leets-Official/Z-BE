@@ -32,4 +32,10 @@ public class FollowController {
         return ApiData.ok(null);
     }
 
+
+    @DeleteMapping
+    public ResponseEntity<ApiData<Void>> unfollow(@RequestBody FollowDTO.Save dto, @RequestParam String myTag){
+        followService.unfollowUser(dto, myTag);
+        return ApiData.ok(null);
+    }
 }
