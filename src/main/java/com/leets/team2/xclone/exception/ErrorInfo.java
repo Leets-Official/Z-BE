@@ -16,7 +16,11 @@ public enum ErrorInfo {
   ALREADY_EXIST_MEMBER(HttpStatus.CONFLICT, "이미 존재하는 멤버입니다.", 10002),
 
   // jwt 영역
-  INVALID_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다.", 10100);
+  INVALID_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다.", 10100),
+
+  // follow 영역
+  INVALID_FOLLOW(HttpStatus.BAD_REQUEST, "잘못된 팔로우 요청입니다.", 10201),
+  FOLLOW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 팔로우한 대상입니다", 10202);
 
   private final HttpStatus statusCode;
   private final String message;
