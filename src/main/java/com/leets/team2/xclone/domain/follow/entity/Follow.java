@@ -4,15 +4,10 @@ import com.leets.team2.xclone.common.entity.AbstractEntity;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "follow")
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class Follow extends AbstractEntity {
     @ManyToOne
@@ -22,4 +17,10 @@ public class Follow extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "followee_id")
     private Member followee;    // 팔로잉 대상
+
+    @Builder
+    public Follow(Member follower, Member followee){
+        this.follower = follower;
+        this.followee = followee;
+    }
 }
