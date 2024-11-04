@@ -2,6 +2,7 @@ package com.leets.team2.xclone.exception.handler;
 
 import com.leets.team2.xclone.common.ApiData;
 import com.leets.team2.xclone.exception.ApplicationException;
+import com.leets.team2.xclone.exception.InvalidFileException;
 import com.leets.team2.xclone.exception.PostNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,11 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(PostNotFoundException.class)
   public ResponseEntity<ApiData<String>> handlePostNotFoundException(PostNotFoundException e){
+    return ApiData.errorFrom(e.getErrorInfo());
+  }
+
+  @ExceptionHandler(InvalidFileException.class)
+  public ResponseEntity<ApiData<String>> handleInvalidFileException(InvalidFileException e){
     return ApiData.errorFrom(e.getErrorInfo());
   }
 }
