@@ -29,11 +29,14 @@ public class AuthService {
   }
 
   public OAuthLoginResponse oauthLogin(KakaoInfo kakaoInfo) {
-    String nickname = kakaoInfo.properties().nickname();
+    String kakaoNickname = kakaoInfo.properties().nickname();
     Long kakaoId = kakaoInfo.id();
+
+    boolean isExistMember = this.memberService.checkMemberExistsByKakaoId(kakaoId);
+
     return new OAuthLoginResponse(
-        !this.memberService.checkMemberExistsBy(nickname, kakaoId),
-        nickname
+        !isExistMember,
+        isExistMember ? this.memberService.findMemberByKakaoId(kakaoId).getNickname() : kakaoNickname
     );
   }
 
