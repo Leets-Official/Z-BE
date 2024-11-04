@@ -20,6 +20,12 @@ public class FollowController {
         return ApiData.ok(followers);
     }
 
+    @GetMapping("/followings")
+    public ResponseEntity<ApiData<List<FollowDTO.Response>>> getFollowingsByTag(@RequestParam String tag){
+        List<FollowDTO.Response> followings = followService.getFollowings(tag);
+        return ApiData.ok(followings);
+    }
+
     @PostMapping
     public ResponseEntity<ApiData<Void>> follow(@RequestBody FollowDTO.Save dto, @RequestParam String myTag){
         followService.followUser(dto, myTag);
