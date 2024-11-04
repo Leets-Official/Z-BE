@@ -61,6 +61,9 @@ public class FollowService {
     }
 
     public void unfollowUser(FollowDTO.Save dto, String myTag) {
+        if(myTag.equals(dto.tag())){
+            throw new InvalidFollowException();
+        }
         List<Follow> followInfos = followRepository.findByFollowee_TagAndFollower_Tag(dto.tag(), myTag);
         if(followInfos.isEmpty()){
             throw new NoSuchFollowException();
