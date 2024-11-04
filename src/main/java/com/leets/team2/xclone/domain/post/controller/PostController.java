@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,23 +23,27 @@ public class PostController {
     private final MemberService memberService;
 
     @PostMapping("/create")//게시물 생성
-    public ResponseEntity<ApiData<PostDTO>> createPost(@RequestParam String authorTag, @RequestBody @Validated PostDTO postDTO){
+    public ResponseEntity<ApiData<PostDTO>> createPost(@RequestParam String authorTag, @RequestBody @Validated PostDTO postDTO,
+                                                       @RequestPart(value="image",required = false)MultipartFile imageFile) throws IOException {
         Member author=memberService.findMemberByTag(authorTag);
-        Post post=postService.createPost(postDTO,author);
+        Post post=postService.createPost(postDTO,author,imageFile);
         return ApiData.created(new PostDTO(
                 post.getId(),
                 post.getTitle(),
-                post.getContent()
+                post.getContent(),
+                post.getImageUrl()
         ));
     }
 
     @PatchMapping("/{postId}/edit")
-    public ResponseEntity<ApiData<PostDTO>> updatePost(@PathVariable Long postId,@RequestBody @Validated PostDTO postDTO){
-        Post updatedPost=postService.updatePost(postId,postDTO);
+    public ResponseEntity<ApiData<PostDTO>> updatePost(@PathVariable Long postId,@RequestBody @Validated PostDTO postDTO,
+                                                       @RequestPart(value="image",required = false)MultipartFile imageFile) throws IOException{
+        Post updatedPost=postService.updatePost(postId,postDTO,imageFile);
         return ApiData.ok(new PostDTO(
                 updatedPost.getId(),
                 updatedPost.getTitle(),
-                updatedPost.getContent()
+                updatedPost.getContent(),
+                updatedPost.getImageUrl()
         ));
     }
 

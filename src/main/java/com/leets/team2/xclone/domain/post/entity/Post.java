@@ -26,4 +26,7 @@ public class Post extends AbstractEntity {//정말 기본적인 부분들만 일
     @JoinColumn(name="author_id",nullable = false)//author_id로 Member와 연결
     private Member author;//작성자를 멤버 객체로.
 
+    @Column(name="image_url")
+    private String imageUrl;
+
 }

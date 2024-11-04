@@ -20,4 +20,6 @@ public class PostDTO {
     @NotBlank
     private String content;//내용
 
+    private String imageUrl;//이미지 url
+
 }
