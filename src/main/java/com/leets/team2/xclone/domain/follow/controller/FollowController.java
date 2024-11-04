@@ -5,10 +5,7 @@ import com.leets.team2.xclone.domain.follow.dto.FollowDTO;
 import com.leets.team2.xclone.domain.follow.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,4 +19,11 @@ public class FollowController {
         List<FollowDTO.Response> followers = followService.getFollowers(tag);
         return ApiData.ok(followers);
     }
+
+    @PostMapping
+    public ResponseEntity<ApiData<Void>> follow(@RequestBody FollowDTO.Save dto, @RequestParam String myTag){
+        followService.followUser(dto, myTag);
+        return ApiData.ok(null);
+    }
+
 }
