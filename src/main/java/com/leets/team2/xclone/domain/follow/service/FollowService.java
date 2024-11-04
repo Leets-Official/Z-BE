@@ -5,6 +5,8 @@ import com.leets.team2.xclone.domain.follow.entity.Follow;
 import com.leets.team2.xclone.domain.follow.repository.FollowRepository;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.repository.MemberRepository;
+import com.leets.team2.xclone.exception.FollowAlreadyExistsException;
+import com.leets.team2.xclone.exception.InvalidFollowException;
 import com.leets.team2.xclone.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ public class FollowService {
     }
 
     public void followUser(FollowDTO.Save dto, String myTag) {
+        validateFollow(dto.tag(), myTag);
         Member followee = memberRepository.findByTag(dto.tag()).orElseThrow(NoSuchMemberException::new);
         Member follower = memberRepository.findByTag(myTag).orElseThrow(NoSuchMemberException::new);
         Follow followInfo = Follow.builder()
@@ -40,5 +43,15 @@ public class FollowService {
                         .followee(followee)
                         .build();
         followRepository.save(followInfo);
+    }
+
+    private void validateFollow(String followee, String follower){
+        if(followee.equals(follower)){
+            throw new InvalidFollowException();
+        }
+        List<Follow> follows = followRepository.findByFollowee_TagAndFollower_Tag(followee, follower);
+        if (!follows.isEmpty()) {
+            throw new FollowAlreadyExistsException();
+        }
     }
 }
