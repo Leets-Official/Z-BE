@@ -32,12 +32,13 @@ public class MemberService {
     return this.memberRepository.existsByTag(tag);
   }
 
-  public boolean checkMemberExistByKakaoNicknameAndKakaoId(String nickname, Long kakaoId) {
-    return this.memberRepository.existsByKakaoNicknameAndKakaoId(nickname, kakaoId);
+  public boolean checkMemberExistsByKakaoId(Long kakaoId) {
+    return this.memberRepository.existsByKakaoId(kakaoId);
   }
 
-  public Member findNicknameByKakaoNicknameAndKakaoId(String kakaoNickname, Long kakaoId) {
-    return this.memberRepository.findByKakaoNicknameAndKakaoId(kakaoNickname, kakaoId).orElseThrow(
-        NoSuchMemberException::new);
+  public Member findMemberByKakaoId(Long kakaoId) {
+    return this.memberRepository.findByKakaoId(kakaoId).orElseThrow(
+        NoSuchMemberException::new
+    );
   }
 }
