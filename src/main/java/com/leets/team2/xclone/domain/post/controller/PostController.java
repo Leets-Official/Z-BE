@@ -3,7 +3,8 @@ package com.leets.team2.xclone.domain.post.controller;
 import com.leets.team2.xclone.common.ApiData;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.service.MemberService;
-import com.leets.team2.xclone.domain.post.dto.PostDTO;
+import com.leets.team2.xclone.domain.post.dto.PostRequestDTO;
+import com.leets.team2.xclone.domain.post.dto.PostResponseDTO;
 import com.leets.team2.xclone.domain.post.entity.Post;
 import com.leets.team2.xclone.domain.post.service.PostService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -23,11 +24,11 @@ public class PostController {
     private final MemberService memberService;
 
     @PostMapping("/create")//게시물 생성
-    public ResponseEntity<ApiData<PostDTO>> createPost(@RequestParam String authorTag, @RequestBody @Validated PostDTO postDTO,
-                                                       @RequestPart(value="image",required = false)MultipartFile imageFile) throws IOException {
+    public ResponseEntity<ApiData<PostResponseDTO>> createPost(@RequestParam String authorTag, @RequestBody @Validated PostRequestDTO postRequestDTO,
+                                                               @RequestPart(value="image",required = false)MultipartFile imageFile) throws IOException {
         Member author=memberService.findMemberByTag(authorTag);
-        Post post=postService.createPost(postDTO,author,imageFile);
-        return ApiData.created(new PostDTO(
+        Post post=postService.createPost(postRequestDTO,author,imageFile);
+        return ApiData.created(new PostResponseDTO(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
@@ -36,12 +37,12 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}/edit")
-    public ResponseEntity<ApiData<PostDTO>> updatePost(@PathVariable Long postId,@RequestBody @Validated PostDTO postDTO,
-                                                       @RequestPart(value="image",required = false)MultipartFile imageFile,
-                                                       @RequestParam String currentMemberTag) throws IOException{
+    public ResponseEntity<ApiData<PostResponseDTO>> updatePost(@PathVariable Long postId, @RequestBody @Validated PostRequestDTO postRequestDTO,
+                                                               @RequestPart(value="image",required = false)MultipartFile imageFile,
+                                                               @RequestParam String currentMemberTag) throws IOException{
         Member currentMember=memberService.findMemberByTag(currentMemberTag);
-        Post updatedPost=postService.updatePost(postId,postDTO,imageFile,currentMember);
-        return ApiData.ok(new PostDTO(
+        Post updatedPost=postService.updatePost(postId,postRequestDTO,imageFile,currentMember);
+        return ApiData.ok(new PostResponseDTO(
                 updatedPost.getId(),
                 updatedPost.getTitle(),
                 updatedPost.getContent(),

@@ -1,7 +1,8 @@
 package com.leets.team2.xclone.domain.post.service;
 
 import com.leets.team2.xclone.domain.member.entities.Member;
-import com.leets.team2.xclone.domain.post.dto.PostDTO;
+import com.leets.team2.xclone.domain.post.dto.PostRequestDTO;
+import com.leets.team2.xclone.domain.post.dto.PostResponseDTO;
 import com.leets.team2.xclone.domain.post.entity.Post;
 import com.leets.team2.xclone.domain.post.repository.PostRepository;
 import com.leets.team2.xclone.exception.InvalidFileException;
@@ -22,7 +23,7 @@ import java.util.UUID;
 public class PostService {
     private final PostRepository postRepository;
 
-    public Post createPost(PostDTO postDTO, Member author, MultipartFile imageFile) throws IOException {
+    public Post createPost(PostRequestDTO postRequestDTO, Member author, MultipartFile imageFile) throws IOException {
         String imageUrl=null;//이미지 url 초기화
 
         if(imageFile!=null&&!imageFile.isEmpty()){
@@ -38,15 +39,15 @@ public class PostService {
             imageUrl=imagePath.toString();
         }
         Post post=Post.builder()
-                .title(postDTO.getTitle())
-                .content(postDTO.getContent())
+                .title(postRequestDTO.getTitle())
+                .content(postRequestDTO.getContent())
                 .imageUrl(imageUrl)
                 .author(author)
                 .build();
         return postRepository.save(post);
     }
 
-    public Post updatePost(Long postId, PostDTO postDTO, MultipartFile imageFile,Member currentMember)throws IOException{
+    public Post updatePost(Long postId, PostRequestDTO postRequestDTO, MultipartFile imageFile, Member currentMember)throws IOException{
         Post post=postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
@@ -54,8 +55,8 @@ public class PostService {
         if(!post.getAuthor().getId().equals(currentMember.getId())){
             throw new UnauthorizedException();
         }
-        post.setTitle(postDTO.getTitle());
-        post.setContent(postDTO.getContent());
+        post.setTitle(postRequestDTO.getTitle());
+        post.setContent(postRequestDTO.getContent());
 
         if(imageFile!=null&&!imageFile.isEmpty()){//새로운 이미지가 있을 경우 원래 있던 이미지 삭제하고 업데이트한다.
             if (imageFile.getContentType()==null||!imageFile.getContentType().equals("image/png")) {

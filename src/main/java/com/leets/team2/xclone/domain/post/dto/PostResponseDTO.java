@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostDTO {
+public class PostResponseDTO {//응답으로 보내는 데이터. 데이터 반환 및 결과를 줄 때 사용.
 
     private Long id;//게시물 id
 
