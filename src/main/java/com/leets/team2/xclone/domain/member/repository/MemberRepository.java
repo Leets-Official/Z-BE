@@ -11,4 +11,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
   boolean existsByNicknameAndKakaoId(String nickname, Long kakaoId);
   Optional<Member> findByNicknameAndKakaoId(String nickname, Long kakaoId);
   boolean existsByTag(String tag);
+  boolean existsByKakaoNicknameAndKakaoId(String kakaoNickname, Long kakaoId);
+  Optional<Member> findByKakaoNicknameAndKakaoId(String kakaoNickname, Long kakaoId);
 }
