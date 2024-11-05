@@ -38,15 +38,8 @@ public class FollowService {
     public List<FollowDTO.Response> getFollowings(String tag) {
         List<Follow> followings = followRepository.findByFollower_Tag(tag);
         return followings.stream()
-                .map(follow -> {
-                    Member following = follow.getFollowee();
-                    return FollowDTO.Response.builder()
-                            .id(following.getId())
-                            .tag(following.getTag())
-                            .nickname(following.getNickname())
-                            .build();
-                })
-                .collect(Collectors.toList());
+                .map(FollowDTO::toDTO)
+                .toList();
     }
 
     public void followUser(FollowDTO.Save dto, String myTag) {
