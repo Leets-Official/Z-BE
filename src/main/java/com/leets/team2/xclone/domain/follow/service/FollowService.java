@@ -11,9 +11,8 @@ import com.leets.team2.xclone.exception.NoSuchFollowException;
 import com.leets.team2.xclone.exception.NoSuchMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +34,7 @@ public class FollowService {
                 .toList();
     }
 
+    @Transactional
     public void followUser(FollowDTO.Save dto, String myTag) {
         validateFollow(dto.tag(), myTag);
         Member followee = memberRepository.findByTag(dto.tag()).orElseThrow(NoSuchMemberException::new);
@@ -46,6 +46,7 @@ public class FollowService {
         followRepository.save(followInfo);
     }
 
+    @Transactional
     public void unfollowUser(FollowDTO.Save dto, String myTag) {
         if(myTag.equals(dto.tag())){
             throw new InvalidFollowException();
