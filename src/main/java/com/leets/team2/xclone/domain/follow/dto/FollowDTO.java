@@ -25,4 +25,9 @@ public class FollowDTO {
         return new Response(following.getId(), following.getTag(), following.getNickname());
     }
 
+    public static FollowDTO.Response followerMemberToResponse(Follow follow){
+        Member follower = follow.getFollower();
+        return new Response(follower.getId(), follower.getTag(), follower.getNickname());
+    }
+
 }
