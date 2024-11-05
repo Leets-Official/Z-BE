@@ -1,10 +1,7 @@
 package com.leets.team2.xclone.exception.handler;
 
 import com.leets.team2.xclone.common.ApiData;
-import com.leets.team2.xclone.exception.ApplicationException;
-import com.leets.team2.xclone.exception.InvalidFileException;
-import com.leets.team2.xclone.exception.PostNotFoundException;
-import com.leets.team2.xclone.exception.UnauthorizedException;
+import com.leets.team2.xclone.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +54,11 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(UnauthorizedException.class)
   public ResponseEntity<ApiData<String>> handleUnauthorizedException(UnauthorizedException e){
+    return ApiData.errorFrom(e.getErrorInfo());
+  }
+
+  @ExceptionHandler(CommentNotFoundException.class)
+  public ResponseEntity<ApiData<String>> handleCommentNotFoundException(CommentNotFoundException e){
     return ApiData.errorFrom(e.getErrorInfo());
   }
 }
