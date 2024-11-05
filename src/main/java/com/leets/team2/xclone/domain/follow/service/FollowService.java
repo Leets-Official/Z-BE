@@ -38,7 +38,7 @@ public class FollowService {
     public List<FollowDTO.Response> getFollowings(String tag) {
         List<Follow> followings = followRepository.findByFollower_Tag(tag);
         return followings.stream()
-                .map(FollowDTO::toDTO)
+                .map(FollowDTO::followingMemberToResponse)
                 .toList();
     }
 

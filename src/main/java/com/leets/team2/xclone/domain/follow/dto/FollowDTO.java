@@ -20,7 +20,7 @@ public class FollowDTO {
             String nickname
     ){}
 
-    public static FollowDTO.Response toDTO(Follow follow){
+    public static FollowDTO.Response followingMemberToResponse(Follow follow){
         Member following = follow.getFollowee();
         return new Response(following.getId(), following.getTag(), following.getNickname());
     }
