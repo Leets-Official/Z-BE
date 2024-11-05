@@ -1,5 +1,7 @@
 package com.leets.team2.xclone.domain.follow.dto;
 
+import com.leets.team2.xclone.domain.follow.entity.Follow;
+import com.leets.team2.xclone.domain.member.entities.Member;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
@@ -17,5 +19,10 @@ public class FollowDTO {
             String tag,
             String nickname
     ){}
+
+    public static FollowDTO.Response toDTO(Follow follow){
+        Member following = follow.getFollowee();
+        return new Response(following.getId(), following.getTag(), following.getNickname());
+    }
 
 }
