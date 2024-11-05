@@ -11,6 +11,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     List<Follow> findByFollower_Tag(String tag);
     List<Follow> findByFollowee_Tag(String tag);
 
-    List<Follow> findByFollowee_TagAndFollower_Tag(String followeeTag, String followerTag);
+    Follow findByFollowee_TagAndFollower_Tag(String followeeTag, String followerTag);
 
 }

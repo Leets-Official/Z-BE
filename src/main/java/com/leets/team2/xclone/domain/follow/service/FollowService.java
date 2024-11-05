@@ -36,9 +36,12 @@ public class FollowService {
 
     @Transactional
     public void followUser(FollowDTO.Save dto, String myTag) {
-        validateFollow(dto.tag(), myTag);
         Member followee = memberRepository.findByTag(dto.tag()).orElseThrow(NoSuchMemberException::new);
         Member follower = memberRepository.findByTag(myTag).orElseThrow(NoSuchMemberException::new);
+
+        Follow follows = followRepository.findByFollowee_TagAndFollower_Tag(dto.tag(), myTag);
+        checkValidFollow(follows, 0);
+
         Follow followInfo = Follow.builder()
                         .follower(follower)
                         .followee(followee)
@@ -48,23 +51,26 @@ public class FollowService {
 
     @Transactional
     public void unfollowUser(FollowDTO.Save dto, String myTag) {
-        if(myTag.equals(dto.tag())){
-            throw new InvalidFollowException();
-        }
-        List<Follow> followInfos = followRepository.findByFollowee_TagAndFollower_Tag(dto.tag(), myTag);
-        if(followInfos.isEmpty()){
-            throw new NoSuchFollowException();
-        }
-        followRepository.deleteAll(followInfos);
+        Member followee = memberRepository.findByTag(dto.tag()).orElseThrow(NoSuchMemberException::new);
+        Member follower = memberRepository.findByTag(myTag).orElseThrow(NoSuchMemberException::new);
+
+        Follow followInfo = followRepository.findByFollowee_TagAndFollower_Tag(dto.tag(), myTag);
+        checkValidFollow(followInfo, 1);
+        followRepository.delete(followInfo);
     }
 
-    private void validateFollow(String followee, String follower){
-        if(followee.equals(follower)){
-            throw new InvalidFollowException();
+    // option
+    // 0 : follow
+    // 1 : unfollow
+    private void checkValidFollow(Follow followInfo, int option){
+        if(followInfo.getFollower().equals(followInfo.getFollowee())){
+            throw new InvalidFollowException(); // 자기 자신을 팔로우/언팔로우한 경우
         }
-        List<Follow> follows = followRepository.findByFollowee_TagAndFollower_Tag(followee, follower);
-        if (!follows.isEmpty()) {
-            throw new FollowAlreadyExistsException();
+        if (!(followInfo ==null) &option==0) {
+            throw new FollowAlreadyExistsException();   // 이미 팔로우한 경우
+        }
+        if(followInfo==null&&option==1){
+            throw new NoSuchFollowException();  // 팔로우하지 않은 대상을 언팔로우 하려는 경우
         }
     }
 
