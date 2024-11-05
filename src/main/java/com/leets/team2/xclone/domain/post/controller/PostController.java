@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,5 +57,17 @@ public class PostController {
         Member currentMember=memberService.findMemberByTag(currentMemberTag);
         postService.deletePost(postId,currentMember);
         return ApiData.ok(null);
+    }
+
+    @GetMapping("/{postId}")//게시물 하나 조회
+    public ResponseEntity<ApiData<PostResponseDTO>>getPost(@PathVariable Long postId){
+        PostResponseDTO post=postService.getPost(postId);
+        return ApiData.ok(post);
+    }
+
+    @GetMapping//게시물 전체 조회
+    public ResponseEntity<ApiData<List<PostResponseDTO>>>getAllPosts(){
+        List<PostResponseDTO>posts=postService.getAllPosts();
+        return ApiData.ok(posts);
     }
 }

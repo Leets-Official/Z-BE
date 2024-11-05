@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,5 +88,17 @@ public class PostService {
             throw new UnauthorizedException();
         }
         postRepository.deleteById(postId);//해당 게시물 아이디의 게시물 삭제
+    }
+
+    public PostResponseDTO getPost(Long postId){
+        Post post=postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+        return new PostResponseDTO(post.getId(),post.getTitle(),post.getContent(), post.getImageUrl());
+    }
+
+    public List<PostResponseDTO> getAllPosts(){
+        return postRepository.findAll().stream()
+                .map(post->new PostResponseDTO(post.getId(),post.getTitle(),post.getContent(),post.getImageUrl()))
+                .collect(Collectors.toList());
     }
 }
