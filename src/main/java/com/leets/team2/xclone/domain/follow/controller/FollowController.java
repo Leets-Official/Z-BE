@@ -16,14 +16,14 @@ import java.util.List;
 public class FollowController {
     private final FollowService followService;
 
-    @Operation(summary = "특정 유저의 팔로워 목록 API", description = "특정 유저의 팔로워 목록을 조회합니다.")
+    @Operation(summary = "특정 유저의 팔로워 목록 조회 API", description = "특정 유저의 팔로워 목록을 조회합니다.")
     @GetMapping("/followers")
     public ResponseEntity<ApiData<List<FollowDTO.Response>>> getFollowersByTag(@RequestParam String tag){
         List<FollowDTO.Response> followers = followService.getFollowers(tag);
         return ApiData.ok(followers);
     }
 
-    @Operation(summary = "특정 유저의 팔로잉 목록 조회 API", description = "특정 유저가 팔로우 중인 대상을 조회합니다.")
+    @Operation(summary = "특정 유저의 팔로잉 목록 조회 API", description = "특정 유저가 팔로우 중인 목록을 조회합니다.")
     @GetMapping("/followings")
     public ResponseEntity<ApiData<List<FollowDTO.Response>>> getFollowingsByTag(@RequestParam String tag){
         List<FollowDTO.Response> followings = followService.getFollowings(tag);
