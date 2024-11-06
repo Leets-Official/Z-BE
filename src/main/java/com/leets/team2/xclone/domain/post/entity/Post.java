@@ -7,6 +7,8 @@ import lombok.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="post")
@@ -28,5 +30,12 @@ public class Post extends AbstractEntity {//정말 기본적인 부분들만 일
 
     @Column(name="image_url")
     private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="parent_post_id")
+    private Post parentPost;
+
+    @OneToMany(mappedBy = "parentPost")
+    private List<Post> childPosts=new ArrayList<>();
 
 }

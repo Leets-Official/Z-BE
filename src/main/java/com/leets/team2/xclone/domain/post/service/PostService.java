@@ -1,6 +1,7 @@
 package com.leets.team2.xclone.domain.post.service;
 
 import com.leets.team2.xclone.domain.member.entities.Member;
+import com.leets.team2.xclone.domain.post.dto.PostEditRequestDTO;
 import com.leets.team2.xclone.domain.post.dto.PostRequestDTO;
 import com.leets.team2.xclone.domain.post.dto.PostResponseDTO;
 import com.leets.team2.xclone.domain.post.entity.Post;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,16 +42,24 @@ public class PostService {
 
             imageUrl=imagePath.toString();
         }
+
+        Post parentPost=null;
+        if(postRequestDTO.getParentPostId()!=null){
+            parentPost=postRepository.findById(postRequestDTO.getParentPostId())
+                    .orElseThrow(PostNotFoundException::new);
+        }
+
         Post post=Post.builder()
                 .title(postRequestDTO.getTitle())
                 .content(postRequestDTO.getContent())
                 .imageUrl(imageUrl)
                 .author(author)
+                .parentPost(parentPost)
                 .build();
         return postRepository.save(post);
     }
 
-    public Post updatePost(Long postId, PostRequestDTO postRequestDTO, MultipartFile imageFile, Member currentMember)throws IOException{
+    public Post updatePost(Long postId, PostEditRequestDTO postEditRequestDTO, MultipartFile imageFile, Member currentMember)throws IOException{
         Post post=postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
@@ -57,8 +67,8 @@ public class PostService {
         if(!post.getAuthor().getId().equals(currentMember.getId())){
             throw new UnauthorizedException();
         }
-        post.setTitle(postRequestDTO.getTitle());
-        post.setContent(postRequestDTO.getContent());
+        post.setTitle(postEditRequestDTO.getTitle());
+        post.setContent(postEditRequestDTO.getContent());
 
         if(imageFile!=null&&!imageFile.isEmpty()){//새로운 이미지가 있을 경우 원래 있던 이미지 삭제하고 업데이트한다.
             if (imageFile.getContentType()==null||!imageFile.getContentType().equals("image/png")) {
@@ -87,18 +97,32 @@ public class PostService {
         if(!post.getAuthor().getId().equals(currentMember.getId())){
             throw new UnauthorizedException();
         }
+
+        List<Post> childPosts = post.getChildPosts();
+        for (Post childPost : childPosts) {
+            childPost.setParentPost(null);//부모와 자식간의 관계를 없앤다.
+        }
+
         postRepository.deleteById(postId);//해당 게시물 아이디의 게시물 삭제
     }
 
     public PostResponseDTO getPost(Long postId){
         Post post=postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        return new PostResponseDTO(post.getId(),post.getTitle(),post.getContent(), post.getImageUrl());
+        return toPostResponseDTO(post);
     }
 
-    public List<PostResponseDTO> getAllPosts(){
-        return postRepository.findAll().stream()
-                .map(post->new PostResponseDTO(post.getId(),post.getTitle(),post.getContent(),post.getImageUrl()))
-                .collect(Collectors.toList());
+    public PostResponseDTO toPostResponseDTO(Post post){//자식 게시물 리스트를 DTO로 변환
+        List<PostResponseDTO> childPosts = post.getChildPosts() != null ? post.getChildPosts().stream()
+                .map(this::toPostResponseDTO)
+                .collect(Collectors.toList()) : Collections.emptyList();//childPosts가 null이 되는 경우를 대비한다. null이면 빈 리스트로 처리.
+        return new PostResponseDTO(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getImageUrl(),
+                post.getParentPost() != null ? post.getParentPost().getId() : null,
+                childPosts
+        );
     }
 }

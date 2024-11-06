@@ -56,9 +56,4 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ApiData<String>> handleUnauthorizedException(UnauthorizedException e){
     return ApiData.errorFrom(e.getErrorInfo());
   }
-
-  @ExceptionHandler(CommentNotFoundException.class)
-  public ResponseEntity<ApiData<String>> handleCommentNotFoundException(CommentNotFoundException e){
-    return ApiData.errorFrom(e.getErrorInfo());
-  }
 }

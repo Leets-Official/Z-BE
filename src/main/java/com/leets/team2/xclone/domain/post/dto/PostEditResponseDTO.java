@@ -6,18 +6,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostRequestDTO {//게시물 생성용
-    @NotBlank
-    private String title;
+public class PostEditResponseDTO {//게시물 수정용
+
+    private Long id;//게시물 id
 
     @NotBlank
-    private String content;
+    private String title;//제목
 
-    private String imageUrl;
+    @NotBlank
+    private String content;//내용
 
-    private Long parentPostId;
+    private String imageUrl;//이미지 url
+
 }

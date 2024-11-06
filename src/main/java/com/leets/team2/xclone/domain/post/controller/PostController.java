@@ -3,6 +3,8 @@ package com.leets.team2.xclone.domain.post.controller;
 import com.leets.team2.xclone.common.ApiData;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.service.MemberService;
+import com.leets.team2.xclone.domain.post.dto.PostEditRequestDTO;
+import com.leets.team2.xclone.domain.post.dto.PostEditResponseDTO;
 import com.leets.team2.xclone.domain.post.dto.PostRequestDTO;
 import com.leets.team2.xclone.domain.post.dto.PostResponseDTO;
 import com.leets.team2.xclone.domain.post.entity.Post;
@@ -29,21 +31,16 @@ public class PostController {
                                                                @RequestPart(value="image",required = false)MultipartFile imageFile) throws IOException {
         Member author=memberService.findMemberByTag(authorTag);
         Post post=postService.createPost(postRequestDTO,author,imageFile);
-        return ApiData.created(new PostResponseDTO(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getImageUrl()
-        ));
+        return ApiData.created(postService.toPostResponseDTO(post));
     }
 
     @PatchMapping("/{postId}/edit")
-    public ResponseEntity<ApiData<PostResponseDTO>> updatePost(@PathVariable Long postId, @RequestBody @Validated PostRequestDTO postRequestDTO,
-                                                               @RequestPart(value="image",required = false)MultipartFile imageFile,
-                                                               @RequestParam String currentMemberTag) throws IOException{
+    public ResponseEntity<ApiData<PostEditResponseDTO>> updatePost(@PathVariable Long postId, @RequestBody @Validated PostEditRequestDTO postEditRequestDTO,
+                                                                   @RequestPart(value="image",required = false)MultipartFile imageFile,
+                                                                   @RequestParam String currentMemberTag) throws IOException{
         Member currentMember=memberService.findMemberByTag(currentMemberTag);
-        Post updatedPost=postService.updatePost(postId,postRequestDTO,imageFile,currentMember);
-        return ApiData.ok(new PostResponseDTO(
+        Post updatedPost=postService.updatePost(postId,postEditRequestDTO,imageFile,currentMember);
+        return ApiData.ok(new PostEditResponseDTO(
                 updatedPost.getId(),
                 updatedPost.getTitle(),
                 updatedPost.getContent(),
@@ -63,11 +60,5 @@ public class PostController {
     public ResponseEntity<ApiData<PostResponseDTO>>getPost(@PathVariable Long postId){
         PostResponseDTO post=postService.getPost(postId);
         return ApiData.ok(post);
-    }
-
-    @GetMapping//게시물 전체 조회
-    public ResponseEntity<ApiData<List<PostResponseDTO>>>getAllPosts(){
-        List<PostResponseDTO>posts=postService.getAllPosts();
-        return ApiData.ok(posts);
     }
 }

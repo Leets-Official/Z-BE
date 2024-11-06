@@ -1,4 +1,4 @@
-package com.leets.team2.xclone.domain.comment.dto;
+package com.leets.team2.xclone.domain.post.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentRequestDTO {
+public class PostEditRequestDTO {//게시물 수정용
+    @NotBlank
+    private String title;
+
     @NotBlank
     private String content;
+
+    private String imageUrl;
+
 }

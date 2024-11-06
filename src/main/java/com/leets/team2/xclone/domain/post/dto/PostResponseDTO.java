@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostResponseDTO {//응답으로 보내는 데이터. 데이터 반환 및 결과를 줄 때 사용.
+public class PostResponseDTO {//게시물 생성용
 
     private Long id;//게시물 id
 
@@ -21,5 +23,9 @@ public class PostResponseDTO {//응답으로 보내는 데이터. 데이터 반�
     private String content;//내용
 
     private String imageUrl;//이미지 url
+
+    private Long parentPostId;
+
+    private List<PostResponseDTO>childPosts;
 
 }
