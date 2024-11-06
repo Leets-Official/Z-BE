@@ -8,16 +8,20 @@ import com.leets.team2.xclone.domain.auth.dto.response.RegisterPostResponse;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.service.MemberService;
 import com.leets.team2.xclone.exception.AlreadyExistMemberException;
+import com.leets.team2.xclone.exception.NoSuchMemberException;
 import com.leets.team2.xclone.utils.jwt.JwtUtils;
 import com.leets.team2.xclone.utils.jwt.JwtWrapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
   private final MemberService memberService;
@@ -32,16 +36,17 @@ public class AuthService {
     String kakaoNickname = kakaoInfo.properties().nickname();
     Long kakaoId = kakaoInfo.id();
 
-    boolean isExistMember = this.memberService.checkMemberExistsByKakaoId(kakaoId);
+    Optional<Member> foundMember = this.memberService.findMemberByKakaoId(kakaoId);
 
     return new OAuthLoginResponse(
-        !isExistMember,
-        isExistMember ? this.memberService.findMemberByKakaoId(kakaoId).getNickname() : kakaoNickname
+        foundMember.isEmpty(),
+        foundMember.isEmpty() ? kakaoNickname : foundMember.get().getNickname()
     );
   }
 
-  public JwtWrapper generateJwt(String nickname, Long kakaoId) {
-    Member member = this.memberService.findMemberBy(nickname, kakaoId);
+  public JwtWrapper generateJwt(Long kakaoId) {
+    Member member = this.memberService.findMemberByKakaoId(kakaoId).orElseThrow(
+        NoSuchMemberException::new);
     return new JwtWrapper(
         this.jwtUtils.generateAccessToken(member.getTag()),
         this.jwtUtils.generateRefreshToken(member.getTag())

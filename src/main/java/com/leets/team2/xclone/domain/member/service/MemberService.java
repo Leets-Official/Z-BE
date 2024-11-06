@@ -3,6 +3,7 @@ package com.leets.team2.xclone.domain.member.service;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.repository.MemberRepository;
 import com.leets.team2.xclone.exception.NoSuchMemberException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,9 +37,7 @@ public class MemberService {
     return this.memberRepository.existsByKakaoId(kakaoId);
   }
 
-  public Member findMemberByKakaoId(Long kakaoId) {
-    return this.memberRepository.findByKakaoId(kakaoId).orElseThrow(
-        NoSuchMemberException::new
-    );
+  public Optional<Member> findMemberByKakaoId(Long kakaoId) {
+    return this.memberRepository.findByKakaoId(kakaoId);
   }
 }
