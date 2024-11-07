@@ -58,7 +58,7 @@ public class AuthControllerImpl implements AuthController {
     List<ResponseCookie> cookies = new ArrayList<>();
     // 최초 로그인이 아니라면 바로 로그인 되도록 JWT 쿠키에 응답
     if (!oAuthLoginResponse.requiredRegister()) {
-      JwtWrapper jwtWrapper = this.authService.generateJwt(kakaoInfo.properties().nickname(), kakaoInfo.id());
+      JwtWrapper jwtWrapper = this.authService.generateJwt(kakaoInfo.id());
       cookies.add(this.cookieUtils.addCookie(jwtWrapper.accessToken(), CookieSettings.ACCESS_TOKEN,
           CookieMaxAge.HALF_HOUR));
       cookies.add(

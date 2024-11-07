@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "member")
+@Table(name = "`member`")
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -31,6 +31,6 @@ public class Member extends AbstractEntity {
   @Column(name = "introduction", nullable = true)
   private String introduction;
 
-  @Column(name = "kakao_id", nullable = false)
+  @Column(name = "kakao_id", nullable = false, unique = true)
   private Long kakaoId;
 }
