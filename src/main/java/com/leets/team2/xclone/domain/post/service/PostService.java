@@ -50,7 +50,6 @@ public class PostService {
         }
 
         Post post=Post.builder()
-                .title(postRequestDTO.getTitle())
                 .content(postRequestDTO.getContent())
                 .imageUrl(imageUrl)
                 .author(author)
@@ -67,7 +66,6 @@ public class PostService {
         if(!post.getAuthor().getId().equals(currentMember.getId())){
             throw new UnauthorizedException();
         }
-        post.setTitle(postEditRequestDTO.getTitle());
         post.setContent(postEditRequestDTO.getContent());
 
         if(imageFile!=null&&!imageFile.isEmpty()){//새로운 이미지가 있을 경우 원래 있던 이미지 삭제하고 업데이트한다.
@@ -118,7 +116,6 @@ public class PostService {
                 .collect(Collectors.toList()) : Collections.emptyList();//childPosts가 null이 되는 경우를 대비한다. null이면 빈 리스트로 처리.
         return new PostResponseDTO(
                 post.getId(),
-                post.getTitle(),
                 post.getContent(),
                 post.getImageUrl(),
                 post.getParentPost() != null ? post.getParentPost().getId() : null,

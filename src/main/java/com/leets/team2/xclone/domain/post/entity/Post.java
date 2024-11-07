@@ -18,8 +18,6 @@ import java.util.List;
 @Getter
 @Setter
 public class Post extends AbstractEntity {//정말 기본적인 부분들만 일단 만들어냈습니다.
-    @Column(name="title",nullable = false)
-    private String title;
 
     @Column(name="content",nullable = false)
     private String content;

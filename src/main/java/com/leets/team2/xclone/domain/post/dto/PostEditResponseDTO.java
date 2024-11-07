@@ -17,9 +17,6 @@ public class PostEditResponseDTO {//게시물 수정용
     private Long id;//게시물 id
 
     @NotBlank
-    private String title;//제목
-
-    @NotBlank
     private String content;//내용
 
     private String imageUrl;//이미지 url

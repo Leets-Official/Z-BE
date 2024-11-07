@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostEditRequestDTO {//게시물 수정용
-    @NotBlank
-    private String title;
 
     @NotBlank
     private String content;

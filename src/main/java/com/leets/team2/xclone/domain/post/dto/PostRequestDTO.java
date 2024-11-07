@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostRequestDTO {//게시물 생성용
-    @NotBlank
-    private String title;
 
     @NotBlank
     private String content;
