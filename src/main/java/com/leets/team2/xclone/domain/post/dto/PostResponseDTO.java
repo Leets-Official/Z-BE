@@ -23,6 +23,8 @@ public class PostResponseDTO {//게시물 생성용
 
     private Long parentPostId;
 
+    private RepostResponseDTO quotePost;
+
     private List<PostResponseDTO>childPosts;
 
 }

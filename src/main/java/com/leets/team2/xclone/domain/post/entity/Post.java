@@ -33,6 +33,10 @@ public class Post extends AbstractEntity {//정말 기본적인 부분들만 일
     @JoinColumn(name="parent_post_id")
     private Post parentPost;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="quote_post_id")
+    private Post quotePost;
+
     @OneToMany(mappedBy = "parentPost")
     private List<Post> childPosts=new ArrayList<>();
 
