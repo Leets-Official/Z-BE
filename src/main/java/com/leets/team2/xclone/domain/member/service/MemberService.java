@@ -9,6 +9,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -39,5 +41,10 @@ public class MemberService {
 
   public Optional<Member> findMemberByKakaoId(Long kakaoId) {
     return this.memberRepository.findByKakaoId(kakaoId);
+  }
+
+  public Member findMemberByTag(String tag){
+    return this.memberRepository.findByTag(tag).orElseThrow(
+            NoSuchMemberException::new);
   }
 }

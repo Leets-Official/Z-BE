@@ -1,7 +1,7 @@
 package com.leets.team2.xclone.exception.handler;
 
 import com.leets.team2.xclone.common.ApiData;
-import com.leets.team2.xclone.exception.ApplicationException;
+import com.leets.team2.xclone.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +40,20 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiData<String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     return ApiData.validationFailure(e.getFieldErrors());
+  }
+
+  @ExceptionHandler(PostNotFoundException.class)
+  public ResponseEntity<ApiData<String>> handlePostNotFoundException(PostNotFoundException e){
+    return ApiData.errorFrom(e.getErrorInfo());
+  }
+
+  @ExceptionHandler(InvalidFileException.class)
+  public ResponseEntity<ApiData<String>> handleInvalidFileException(InvalidFileException e){
+    return ApiData.errorFrom(e.getErrorInfo());
+  }
+
+  @ExceptionHandler(UnauthorizedException.class)
+  public ResponseEntity<ApiData<String>> handleUnauthorizedException(UnauthorizedException e){
+    return ApiData.errorFrom(e.getErrorInfo());
   }
 }
