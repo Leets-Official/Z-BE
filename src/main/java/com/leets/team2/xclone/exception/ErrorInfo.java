@@ -17,8 +17,6 @@ public enum ErrorInfo {
 
   NO_SUCH_POST(HttpStatus.NOT_FOUND,"해당 게시물을 찾을 수 없습니다.",10003),//게시물을 못 찾았을 때 에러 정보
 
-  INVALID_FILE(HttpStatus.BAD_REQUEST,"png 형식만 가능합니다.",10004),
-
   UNAUTHORIZED(HttpStatus.FORBIDDEN,"권한이 없습니다.",10005),//권한 인증 실패의 경우, 게시물 수정, 삭제 시 예외처리
 
   // jwt 영역
@@ -27,7 +25,10 @@ public enum ErrorInfo {
   // follow 영역
   INVALID_FOLLOW(HttpStatus.BAD_REQUEST, "잘못된 팔로우 요청입니다. (자기 자신을 팔로우하거나 언팔로우할 수 없습니다.)", 10201),
   FOLLOW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 팔로우한 대상입니다", 10202),
-  NO_SUCH_FOLLOW(HttpStatus.BAD_REQUEST, "팔로우하지 않은 대상입니다", 10203);
+  NO_SUCH_FOLLOW(HttpStatus.BAD_REQUEST, "팔로우하지 않은 대상입니다", 10203),
+
+  // image 영역
+  UNSUPPORTED_FILE_FORMAT(HttpStatus.BAD_REQUEST, "지원되지 않는 확장자 입니다. jpg, jpeg, png 파일만 업로드할 수 있습니다", 400);
 
   private final HttpStatus statusCode;
   private final String message;
