@@ -127,13 +127,20 @@ public class PostService {
         if(post.getQuotePost()!=null){
             repostResponseDTO=RepostResponseDTO.builder()
                     .id(post.getQuotePost().getId())
+                    .authorNickname(post.getQuotePost().getAuthor().getNickname())
+                    .authorTag(post.getQuotePost().getAuthor().getTag())
                     .content(post.getQuotePost().getContent())
                     .imageUrl(post.getQuotePost().getImageUrl())
                     .build();
         }//인용한 게시물 가져오기
 
+        String authorNickname=post.getAuthor().getNickname();
+        String authorTag=post.getAuthor().getTag();
+
         return new PostResponseDTO(
                 post.getId(),
+                authorNickname,
+                authorTag,
                 post.getContent(),
                 post.getImageUrl(),
                 post.getParentPost() != null ? post.getParentPost().getId() : null,
