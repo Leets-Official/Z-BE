@@ -15,8 +15,6 @@ public class PostRequestDTO {//게시물 생성용
     @NotBlank
     private String content;
 
-    private String imageUrl;
-
     private Long parentPostId;
 
     private Long quotePostId;

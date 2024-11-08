@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -21,6 +23,6 @@ public class RepostResponseDTO {
 
     private String content;
 
-    private String imageUrl;
+    private List<String> imageUrls;
 
 }

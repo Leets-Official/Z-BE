@@ -2,11 +2,9 @@ package com.leets.team2.xclone.domain.post.entity;
 
 import com.leets.team2.xclone.common.entity.AbstractEntity;
 import com.leets.team2.xclone.domain.member.entities.Member;
+import com.leets.team2.xclone.image.converter.ImageListConverter;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,9 @@ public class Post extends AbstractEntity {//정말 기본적인 부분들만 일
     private Member author;//작성자를 멤버 객체로.
 
     @Column(name="image_url")
-    private String imageUrl;
+    @Convert(converter = ImageListConverter.class)
+    private List<String> imageUrls = new ArrayList<>();
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parent_post_id")
