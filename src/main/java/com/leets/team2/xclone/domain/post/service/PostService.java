@@ -4,6 +4,7 @@ import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.post.dto.PostEditRequestDTO;
 import com.leets.team2.xclone.domain.post.dto.PostRequestDTO;
 import com.leets.team2.xclone.domain.post.dto.PostResponseDTO;
+import com.leets.team2.xclone.domain.post.dto.RepostResponseDTO;
 import com.leets.team2.xclone.domain.post.entity.Post;
 import com.leets.team2.xclone.domain.post.repository.PostRepository;
 import com.leets.team2.xclone.exception.InvalidFileException;
@@ -49,11 +50,18 @@ public class PostService {
                     .orElseThrow(PostNotFoundException::new);
         }
 
+        Post quotePost=null;
+        if(postRequestDTO.getQuotePostId()!=null){
+            quotePost=postRepository.findById(postRequestDTO.getQuotePostId())
+                    .orElseThrow(PostNotFoundException::new);
+        }
+
         Post post=Post.builder()
                 .content(postRequestDTO.getContent())
                 .imageUrl(imageUrl)
                 .author(author)
                 .parentPost(parentPost)
+                .quotePost(quotePost)
                 .build();
         return postRepository.save(post);
     }
@@ -110,16 +118,35 @@ public class PostService {
         return toPostResponseDTO(post);
     }
 
-    public PostResponseDTO toPostResponseDTO(Post post){//자식 게시물 리스트를 DTO로 변환
+    public PostResponseDTO toPostResponseDTO(Post post){//자식 게시물 리스트를 DTO로 변환, 인용 게시물 DTO에 담기
         List<PostResponseDTO> childPosts = post.getChildPosts() != null ? post.getChildPosts().stream()
                 .map(this::toPostResponseDTO)
                 .collect(Collectors.toList()) : Collections.emptyList();//childPosts가 null이 되는 경우를 대비한다. null이면 빈 리스트로 처리.
+
+        RepostResponseDTO repostResponseDTO=null;
+        if(post.getQuotePost()!=null){
+            repostResponseDTO=RepostResponseDTO.builder()
+                    .id(post.getQuotePost().getId())
+                    .authorNickname(post.getQuotePost().getAuthor().getNickname())
+                    .authorTag(post.getQuotePost().getAuthor().getTag())
+                    .content(post.getQuotePost().getContent())
+                    .imageUrl(post.getQuotePost().getImageUrl())
+                    .build();
+        }//인용한 게시물 가져오기
+
+        String authorNickname=post.getAuthor().getNickname();
+        String authorTag=post.getAuthor().getTag();
+
         return new PostResponseDTO(
                 post.getId(),
+                authorNickname,
+                authorTag,
                 post.getContent(),
                 post.getImageUrl(),
                 post.getParentPost() != null ? post.getParentPost().getId() : null,
+                repostResponseDTO,
                 childPosts
+
         );
     }
 }
