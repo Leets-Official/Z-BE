@@ -7,42 +7,31 @@ import com.leets.team2.xclone.domain.post.dto.PostResponseDTO;
 import com.leets.team2.xclone.domain.post.dto.RepostResponseDTO;
 import com.leets.team2.xclone.domain.post.entity.Post;
 import com.leets.team2.xclone.domain.post.repository.PostRepository;
-import com.leets.team2.xclone.exception.InvalidFileException;
 import com.leets.team2.xclone.exception.PostNotFoundException;
 import com.leets.team2.xclone.exception.UnauthorizedException;
+import com.leets.team2.xclone.image.service.ImageSaveService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final ImageSaveService imageSaveService;
 
-    public Post createPost(PostRequestDTO postRequestDTO, Member author, MultipartFile imageFile) throws IOException {
-        String imageUrl=null;//이미지 url 초기화
+    public Post createPost(PostRequestDTO postRequestDTO, Member author, List<MultipartFile> images) throws IOException {
+        List<String> imageUrls;
+        imageUrls = imageSaveService.uploadImages(images);
 
-        if(imageFile!=null&&!imageFile.isEmpty()){
-            if(imageFile.getContentType()==null||!imageFile.getContentType().equals("image/png")){
-                throw new InvalidFileException();
-            }
-
-            String imageName= UUID.randomUUID().toString()+"_"+imageFile.getOriginalFilename();//이미지 파일의 이름 생성
-            Path imagePath= Paths.get("uploads/"+imageName);//저장 경로 설정
-            Files.createDirectories(imagePath.getParent());//폴더 없으면 새로 생성
-            Files.write(imagePath,imageFile.getBytes());//파일을 경로에 저장
-
-            imageUrl=imagePath.toString();
-        }
 
         Post parentPost=null;
         if(postRequestDTO.getParentPostId()!=null){
@@ -58,7 +47,7 @@ public class PostService {
 
         Post post=Post.builder()
                 .content(postRequestDTO.getContent())
-                .imageUrl(imageUrl)
+                .imageUrls(imageUrls)
                 .author(author)
                 .parentPost(parentPost)
                 .quotePost(quotePost)
@@ -66,7 +55,8 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public Post updatePost(Long postId, PostEditRequestDTO postEditRequestDTO, MultipartFile imageFile, Member currentMember)throws IOException{
+    @Transactional
+    public Post updatePost(Long postId, PostEditRequestDTO postEditRequestDTO, List<MultipartFile> images, Member currentMember)throws IOException{
         Post post=postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
@@ -76,24 +66,15 @@ public class PostService {
         }
         post.setContent(postEditRequestDTO.getContent());
 
-        if(imageFile!=null&&!imageFile.isEmpty()){//새로운 이미지가 있을 경우 원래 있던 이미지 삭제하고 업데이트한다.
-            if (imageFile.getContentType()==null||!imageFile.getContentType().equals("image/png")) {
-                throw new InvalidFileException();
-            }
-            if(post.getImageUrl()!=null){
-                Path existingImagePath=Paths.get(post.getImageUrl());
-                Files.deleteIfExists(existingImagePath);//기존 파일 삭제(존재한다면)
-            }
-            String imageName= UUID.randomUUID().toString()+"_"+imageFile.getOriginalFilename();//이미지 파일의 이름 생성
-            Path imagePath= Paths.get("uploads/"+imageName);//저장 경로 설정
-            Files.createDirectories(imagePath.getParent());//폴더 없으면 새로 생성
-            Files.write(imagePath,imageFile.getBytes());//파일을 경로에 저장
-
-            post.setImageUrl(imagePath.toString());
+        if(!images.isEmpty()){//새로운 이미지가 있을 경우 원래 있던 이미지 삭제하고 업데이트한다.
+            List<String> imageUrls;
+            imageUrls = imageSaveService.uploadImages(images);
+            post.setImageUrls(imageUrls);
         }
         return postRepository.save(post);
     }
 
+    @Transactional
     public void deletePost(Long postId,Member currentMember){
         //게시물이 존재하지 않으면 예외발생. 작성자 정보에도 접근하기 위해 existsById에서 findById로 수정
         Post post=postRepository.findById(postId)
@@ -130,7 +111,7 @@ public class PostService {
                     .authorNickname(post.getQuotePost().getAuthor().getNickname())
                     .authorTag(post.getQuotePost().getAuthor().getTag())
                     .content(post.getQuotePost().getContent())
-                    .imageUrl(post.getQuotePost().getImageUrl())
+                    .imageUrls(post.getQuotePost().getImageUrls())
                     .build();
         }//인용한 게시물 가져오기
 
@@ -142,7 +123,7 @@ public class PostService {
                 authorNickname,
                 authorTag,
                 post.getContent(),
-                post.getImageUrl(),
+                post.getImageUrls(),
                 post.getParentPost() != null ? post.getParentPost().getId() : null,
                 repostResponseDTO,
                 childPosts
