@@ -47,8 +47,8 @@ public class GlobalExceptionHandler {
     return ApiData.errorFrom(e.getErrorInfo());
   }
 
-  @ExceptionHandler(InvalidFileException.class)
-  public ResponseEntity<ApiData<String>> handleInvalidFileException(InvalidFileException e){
+  @ExceptionHandler(UnsupportedFileFormatException.class)
+  public ResponseEntity<ApiData<String>> handleInvalidFileException(UnsupportedFileFormatException e){
     return ApiData.errorFrom(e.getErrorInfo());
   }
 
