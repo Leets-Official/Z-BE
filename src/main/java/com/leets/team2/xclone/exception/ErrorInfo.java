@@ -23,6 +23,10 @@ public enum ErrorInfo {
 
   // jwt 영역
   INVALID_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다.", 10100),
+  NOT_FOUND_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Refresh 토큰을 찾을 수 없습니다", 10103),
+  NOT_FOUND_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Access 토큰을 찾을 수 없습니다", 10101),
+  EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다", 10100),
+  
 
   // follow 영역
   INVALID_FOLLOW(HttpStatus.BAD_REQUEST, "잘못된 팔로우 요청입니다. (자기 자신을 팔로우하거나 언팔로우할 수 없습니다.)", 10201),
