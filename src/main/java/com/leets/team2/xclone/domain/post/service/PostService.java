@@ -1,5 +1,7 @@
 package com.leets.team2.xclone.domain.post.service;
 
+import com.leets.team2.xclone.domain.follow.dto.FollowDTO;
+import com.leets.team2.xclone.domain.follow.service.FollowService;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.post.dto.PostEditRequestDTO;
 import com.leets.team2.xclone.domain.post.dto.PostRequestDTO;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageSaveService imageSaveService;
+    private final FollowService followService;
 
     public Post createPost(PostRequestDTO postRequestDTO, Member author, List<MultipartFile> images) throws IOException {
         List<String> imageUrls;
@@ -99,11 +102,18 @@ public class PostService {
         return toPostResponseDTO(post);
     }
 
-    public List<PostResponseDTO> getAllPosts(){
+    public List<PostResponseDTO> getAllPosts(String currentMemberTag){
+        List<String>followTags=followService.getFollowings(currentMemberTag)
+                .stream()
+                .map(FollowDTO.Response::tag)
+                .toList();
+
         List<Post>posts=postRepository.findAll()
                 .stream()
                 .filter(post -> post.getParentPost()==null)//댓글 게시물은 필터링
+                .filter(post-> followTags.contains(post.getAuthor().getTag()))//팔로우한 사람의 게시물만 뜨게
                 .collect(Collectors.toList());
+
         return posts.stream()
                 .map(this::toPostResponseDTO)
                 .collect(Collectors.toList());

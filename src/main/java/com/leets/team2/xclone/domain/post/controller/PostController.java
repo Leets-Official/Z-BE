@@ -63,8 +63,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")//게시물 전체 조회, 댓글은 제외
-    public ResponseEntity<ApiData<List<PostResponseDTO>>> getAllPosts(){
-        List<PostResponseDTO>posts=postService.getAllPosts();
+    public ResponseEntity<ApiData<List<PostResponseDTO>>> getAllPosts(@RequestParam String currentMemberTag){
+        List<PostResponseDTO>posts=postService.getAllPosts(currentMemberTag);
         return ApiData.ok(posts);
     }
 }
