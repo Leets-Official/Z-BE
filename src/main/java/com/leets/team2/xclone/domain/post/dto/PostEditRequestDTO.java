@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PostEditRequestDTO {//게시물 수정용
 
-    @NotNull
+    @NotBlank
     private String content;
 
     private List<String> imageUrls;
