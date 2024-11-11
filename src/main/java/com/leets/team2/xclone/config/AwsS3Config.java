@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@RequiredArgsConstructor
 public class AwsS3Config {
 
     @Value("${cloud.aws.credentials.access-key}")
