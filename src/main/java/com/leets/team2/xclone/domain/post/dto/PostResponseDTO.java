@@ -25,7 +25,7 @@ public class PostResponseDTO {//게시물 생성용
     @NotBlank
     private String content;//내용
 
-    private String imageUrl;//이미지 url
+    private List<String> imageUrls;//이미지 url
 
     private Long parentPostId;
 
