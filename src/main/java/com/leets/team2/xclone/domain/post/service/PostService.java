@@ -99,6 +99,16 @@ public class PostService {
         return toPostResponseDTO(post);
     }
 
+    public List<PostResponseDTO> getAllPosts(){
+        List<Post>posts=postRepository.findAll()
+                .stream()
+                .filter(post -> post.getParentPost()==null)//댓글 게시물은 필터링
+                .collect(Collectors.toList());
+        return posts.stream()
+                .map(this::toPostResponseDTO)
+                .collect(Collectors.toList());
+    }
+
     public PostResponseDTO toPostResponseDTO(Post post){//자식 게시물 리스트를 DTO로 변환, 인용 게시물 DTO에 담기
         List<PostResponseDTO> childPosts = post.getChildPosts() != null ? post.getChildPosts().stream()
                 .map(this::toPostResponseDTO)

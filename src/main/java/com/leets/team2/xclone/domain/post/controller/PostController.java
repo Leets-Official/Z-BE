@@ -61,4 +61,10 @@ public class PostController {
         PostResponseDTO post=postService.getPost(postId);
         return ApiData.ok(post);
     }
+
+    @GetMapping("/posts")//게시물 전체 조회, 댓글은 제외
+    public ResponseEntity<ApiData<List<PostResponseDTO>>> getAllPosts(){
+        List<PostResponseDTO>posts=postService.getAllPosts();
+        return ApiData.ok(posts);
+    }
 }
