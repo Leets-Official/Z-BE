@@ -1,6 +1,9 @@
 package com.leets.team2.xclone.domain.post.controller;
 
 import com.leets.team2.xclone.common.ApiData;
+import com.leets.team2.xclone.common.auth.MemberContext;
+import com.leets.team2.xclone.common.auth.annotations.UseGuards;
+import com.leets.team2.xclone.common.auth.guards.MemberGuard;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.service.MemberService;
 import com.leets.team2.xclone.domain.post.dto.*;
@@ -25,21 +28,21 @@ public class PostController {
     private final PostService postService;
     private final MemberService memberService;
 
+    @UseGuards(MemberGuard.class)
     @PostMapping("/create")//게시물 생성
-    public ResponseEntity<ApiData<PostResponseDTO>> createPost(@RequestParam String authorTag,
-                                                               @RequestPart @Valid PostRequestDTO postRequestDTO,
+    public ResponseEntity<ApiData<PostResponseDTO>> createPost(@RequestPart @Valid PostRequestDTO postRequestDTO,
                                                                @RequestPart(value="images",required = false)List<MultipartFile> imageFiles) throws IOException {
-        Member author=memberService.findMemberByTag(authorTag);
+        Member author= MemberContext.getMember();
         Post post=postService.createPost(postRequestDTO,author,imageFiles);
         return ApiData.created(postService.toPostResponseDTO(post));
     }
 
+    @UseGuards(MemberGuard.class)
     @PatchMapping("/{postId}")
     public ResponseEntity<ApiData<PostEditResponseDTO>> updatePost(@PathVariable Long postId,
                                                                    @RequestPart @Validated PostEditRequestDTO postEditRequestDTO,
-                                                                   @RequestPart(value="images",required = false) List<MultipartFile> images,
-                                                                   @RequestParam String currentMemberTag) throws IOException{
-        Member currentMember=memberService.findMemberByTag(currentMemberTag);
+                                                                   @RequestPart(value="images",required = false) List<MultipartFile> images) throws IOException{
+        Member currentMember=MemberContext.getMember();
         Post updatedPost=postService.updatePost(postId,postEditRequestDTO,images,currentMember);
         return ApiData.ok(new PostEditResponseDTO(
                 updatedPost.getId(),
@@ -48,10 +51,10 @@ public class PostController {
         ));
     }
 
+    @UseGuards(MemberGuard.class)
     @DeleteMapping("/{postId}")
-    public ResponseEntity<ApiData<Void>> deletePost(@PathVariable Long postId,
-                                                    @RequestParam String currentMemberTag){
-        Member currentMember=memberService.findMemberByTag(currentMemberTag);
+    public ResponseEntity<ApiData<Void>> deletePost(@PathVariable Long postId){
+        Member currentMember=MemberContext.getMember();
         postService.deletePost(postId,currentMember);
         return ApiData.ok(null);
     }
