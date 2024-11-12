@@ -32,10 +32,14 @@ public class PostService {
     private final ImageSaveService imageSaveService;
     private final FollowService followService;
 
-    public Post createPost(PostRequestDTO postRequestDTO, Member author, List<MultipartFile> images) throws IOException {
-        List<String> imageUrls;
-        imageUrls = imageSaveService.uploadImages(images);
-
+    public Post createPost(PostRequestDTO postRequestDTO, Member author, List<MultipartFile> images) {
+        List<String> imageUrls = new ArrayList<>();
+        if (images != null && images.stream().anyMatch(file -> !file.isEmpty())) {
+            List<MultipartFile> nonEmptyImages = images.stream()
+                    .filter(file -> !file.isEmpty())
+                    .toList();
+            imageUrls = imageSaveService.uploadImages(nonEmptyImages);
+        }
 
         Post parentPost=null;
         if(postRequestDTO.getParentPostId()!=null){
@@ -70,9 +74,15 @@ public class PostService {
         }
         post.setContent(postEditRequestDTO.getContent());
 
-        if(!images.isEmpty()){//새로운 이미지가 있을 경우 원래 있던 이미지 삭제하고 업데이트한다.
-            List<String> imageUrls;
-            imageUrls = imageSaveService.uploadImages(images);
+        List<String> imageUrls = new ArrayList<>();
+        if (images != null && images.stream().anyMatch(file -> !file.isEmpty())) {
+            List<MultipartFile> nonEmptyImages = images.stream()
+                    .filter(file -> !file.isEmpty())
+                    .toList();
+            imageUrls = imageSaveService.uploadImages(nonEmptyImages);
+            post.setImageUrls(imageUrls);
+        }
+        else{
             post.setImageUrls(imageUrls);
         }
         return postRepository.save(post);
