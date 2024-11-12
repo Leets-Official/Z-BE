@@ -1,5 +1,7 @@
 package com.leets.team2.xclone.domain.post.service;
 
+import com.leets.team2.xclone.domain.follow.dto.FollowDTO;
+import com.leets.team2.xclone.domain.follow.service.FollowService;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.post.dto.PostEditRequestDTO;
 import com.leets.team2.xclone.domain.post.dto.PostRequestDTO;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageSaveService imageSaveService;
+    private final FollowService followService;
 
     public Post createPost(PostRequestDTO postRequestDTO, Member author, List<MultipartFile> images) throws IOException {
         List<String> imageUrls;
@@ -97,6 +101,25 @@ public class PostService {
         Post post=postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         return toPostResponseDTO(post);
+    }
+
+    public List<PostResponseDTO> getAllPosts(String currentMemberTag){
+        List<String>followTags=followService.getFollowings(currentMemberTag)
+                .stream()
+                .map(FollowDTO.Response::tag)
+                .toList();
+        List<String> changedFollowTags = new ArrayList<>(followTags);
+        changedFollowTags.add(currentMemberTag);
+
+        List<Post>posts=postRepository.findAll()
+                .stream()
+                .filter(post -> post.getParentPost()==null)//댓글 게시물은 필터링
+                .filter(post-> changedFollowTags.contains(post.getAuthor().getTag()))//팔로우한 사람의 게시물만 뜨게
+                .collect(Collectors.toList());
+
+        return posts.stream()
+                .map(this::toPostResponseDTO)
+                .collect(Collectors.toList());
     }
 
     public PostResponseDTO toPostResponseDTO(Post post){//자식 게시물 리스트를 DTO로 변환, 인용 게시물 DTO에 담기
