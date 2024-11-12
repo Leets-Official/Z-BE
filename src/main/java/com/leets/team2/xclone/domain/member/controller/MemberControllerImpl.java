@@ -46,6 +46,7 @@ public class MemberControllerImpl implements MemberController{
     return ApiData.ok(response);
   }
 
+  @Override
   @UseGuards({MemberGuard.class})
   @PatchMapping("/profile/picture")
   public ResponseEntity<ApiData<MemberDTO.Response>> updateProfilePicture(@RequestPart(value="image",required = false) MultipartFile image){

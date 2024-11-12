@@ -3,7 +3,9 @@ package com.leets.team2.xclone.domain.member.controller;
 import com.leets.team2.xclone.common.ApiData;
 import com.leets.team2.xclone.domain.member.dto.MemberDTO;
 import com.leets.team2.xclone.domain.member.dto.requests.CheckTagDuplicationGetRequest;
+import com.leets.team2.xclone.domain.member.dto.requests.MemberFindGetRequest;
 import com.leets.team2.xclone.domain.member.dto.responses.CheckTagDuplicationGetResponse;
+import com.leets.team2.xclone.domain.member.dto.responses.MemberFindGetResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +22,7 @@ public interface MemberController {
   ResponseEntity<ApiData<CheckTagDuplicationGetResponse>> getCheckTagDuplication(
       CheckTagDuplicationGetRequest request);
 
-  @Operation(summary = "Member 찾기 API", description = "해당하는 멤버를 찾습니다.")
+  @Operation(summary = "멤버 정보 가져오기 API", description = "Tag로 멤버 정보를 찾습니다.")
   ResponseEntity<ApiData<MemberDTO.Response>> getMemberInfo(@RequestParam String tag);
 
   @Operation(summary = "프로필 사진 수정 API", description = "자신의 프로필 사진을 수정합니다.")

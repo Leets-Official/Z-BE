@@ -1,17 +1,22 @@
 package com.leets.team2.xclone.domain.member.service;
 
 import com.leets.team2.xclone.domain.member.dto.MemberDTO;
+import com.leets.team2.xclone.domain.member.dto.responses.MemberFindGetResponse;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.repository.MemberRepository;
 import com.leets.team2.xclone.exception.NoSuchMemberException;
+
 import java.util.List;
 import java.util.Optional;
+
 import com.leets.team2.xclone.image.service.ImageSaveService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +54,13 @@ public class MemberService {
   public Member findMemberByTag(String tag){
     return this.memberRepository.findByTag(tag).orElseThrow(
             NoSuchMemberException::new);
+  }
+
+  public MemberFindGetResponse findMembersByTag(String tag) {
+    MemberFindGetResponse memberFindGetResponse = MemberFindGetResponse.empty();
+
+    this.memberRepository.findByTagContaining(tag).forEach(memberFindGetResponse::add);
+    return memberFindGetResponse;
   }
 
   public MemberDTO.Response updateProfilePicture(Member currentMember, MultipartFile image) {
