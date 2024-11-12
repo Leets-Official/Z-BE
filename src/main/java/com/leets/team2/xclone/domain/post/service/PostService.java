@@ -149,7 +149,8 @@ public class PostService {
                 post.getImageUrls(),
                 post.getParentPost() != null ? post.getParentPost().getId() : null,
                 repostResponseDTO,
-                childPosts
+                childPosts,
+                post.getCreatedAt()
 
         );
     }

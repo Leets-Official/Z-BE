@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -32,5 +33,7 @@ public class PostResponseDTO {//게시물 생성용
     private RepostResponseDTO quotePost;
 
     private List<PostResponseDTO>childPosts;
+
+    private LocalDateTime createdAt;
 
 }
