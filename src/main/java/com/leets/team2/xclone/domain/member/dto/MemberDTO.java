@@ -10,6 +10,7 @@ public class MemberDTO {
             LocalDateTime birthDate,
             String tag,
             String nickname,
-            String introduction
+            String introduction,
+            String profilePicture
     ){}
 }
