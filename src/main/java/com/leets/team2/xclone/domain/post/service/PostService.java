@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -107,11 +108,13 @@ public class PostService {
                 .stream()
                 .map(FollowDTO.Response::tag)
                 .toList();
+        List<String> changedFollowTags = new ArrayList<>(followTags);
+        changedFollowTags.add(currentMemberTag);
 
         List<Post>posts=postRepository.findAll()
                 .stream()
                 .filter(post -> post.getParentPost()==null)//댓글 게시물은 필터링
-                .filter(post-> followTags.contains(post.getAuthor().getTag()))//팔로우한 사람의 게시물만 뜨게
+                .filter(post-> changedFollowTags.contains(post.getAuthor().getTag()))//팔로우한 사람의 게시물만 뜨게
                 .collect(Collectors.toList());
 
         return posts.stream()
