@@ -1,8 +1,10 @@
 package com.leets.team2.xclone.domain.member.service;
 
+import com.leets.team2.xclone.domain.member.dto.responses.MemberFindGetResponse;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.repository.MemberRepository;
 import com.leets.team2.xclone.exception.NoSuchMemberException;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
@@ -46,5 +48,12 @@ public class MemberService {
   public Member findMemberByTag(String tag){
     return this.memberRepository.findByTag(tag).orElseThrow(
             NoSuchMemberException::new);
+  }
+
+  public MemberFindGetResponse findMembersByTag(String tag) {
+    MemberFindGetResponse memberFindGetResponse = MemberFindGetResponse.empty();
+
+    this.memberRepository.findByTagContaining(tag).forEach(memberFindGetResponse::add);
+    return memberFindGetResponse;
   }
 }
