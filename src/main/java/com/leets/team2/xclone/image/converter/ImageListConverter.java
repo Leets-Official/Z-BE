@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageListConverter implements AttributeConverter<List<String>, String> {
@@ -16,6 +16,9 @@ public class ImageListConverter implements AttributeConverter<List<String>, Stri
 
     @Override
     public String convertToDatabaseColumn(List<String> attribute) {
+        if (attribute == null || attribute.isEmpty()) {
+            return "";
+        }
         try {
             return mapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
@@ -25,6 +28,9 @@ public class ImageListConverter implements AttributeConverter<List<String>, Stri
 
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) {
+            return new ArrayList<>(); // Return an empty list if dbData is null or empty
+        }
         try {
             return mapper.readValue(dbData, new TypeReference<>() {});
         } catch (IOException e) {

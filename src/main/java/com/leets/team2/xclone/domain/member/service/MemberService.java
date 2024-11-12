@@ -1,15 +1,20 @@
 package com.leets.team2.xclone.domain.member.service;
 
+import com.leets.team2.xclone.domain.member.dto.MemberDTO;
 import com.leets.team2.xclone.domain.member.dto.responses.MemberFindGetResponse;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.repository.MemberRepository;
 import com.leets.team2.xclone.exception.NoSuchMemberException;
+
 import java.util.List;
 import java.util.Optional;
+
+import com.leets.team2.xclone.image.service.ImageSaveService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.NoSuchElementException;
 
@@ -19,6 +24,7 @@ public class MemberService {
 
   private static final Log log = LogFactory.getLog(MemberService.class);
   private final MemberRepository memberRepository;
+  private final ImageSaveService imageSaveService;
 
   public boolean checkMemberExistsBy(String nickname, Long kakaoId) {
     return this.memberRepository.existsByNicknameAndKakaoId(nickname, kakaoId);
@@ -55,5 +61,21 @@ public class MemberService {
 
     this.memberRepository.findByTagContaining(tag).forEach(memberFindGetResponse::add);
     return memberFindGetResponse;
+  }
+
+  public MemberDTO.Response updateProfilePicture(Member currentMember, MultipartFile image) {
+
+    if(!image.isEmpty()){
+      List<String> imageUrl = imageSaveService.uploadImages(List.of(image));
+      currentMember.setImage(imageUrl.get(0));
+    }
+    memberRepository.save(currentMember);
+    return MemberDTO.Response.builder()
+            .birthDate(currentMember.getBirthDate())
+            .tag(currentMember.getTag())
+            .nickname(currentMember.getNickname())
+            .introduction(currentMember.getIntroduction())
+            .profilePicture(currentMember.getImageUrl().get(0))
+            .build();
   }
 }
