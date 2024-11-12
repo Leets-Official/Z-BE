@@ -19,6 +19,4 @@ public class PostEditResponseDTO {//게시물 수정용
     @NotBlank
     private String content;//내용
 
-    private List<String> imageUrls;//이미지 url
-
 }
