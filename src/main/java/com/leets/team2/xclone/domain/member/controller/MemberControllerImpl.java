@@ -7,13 +7,19 @@ import com.leets.team2.xclone.common.auth.guards.MemberGuard;
 import com.leets.team2.xclone.domain.member.dto.MemberDTO;
 import com.leets.team2.xclone.domain.member.dto.requests.CheckTagDuplicationGetRequest;
 import com.leets.team2.xclone.domain.member.dto.responses.CheckTagDuplicationGetResponse;
+import com.leets.team2.xclone.domain.member.dto.responses.MemberTagGetResponse;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -55,4 +61,12 @@ public class MemberControllerImpl implements MemberController{
     return ApiData.ok(response);
   }
 
+  @Override
+  @GetMapping("/my-tag")
+  @UseGuards({MemberGuard.class})
+  public ResponseEntity<ApiData<MemberTagGetResponse>> getMemberTag() {
+    return ApiData.ok(
+        new MemberTagGetResponse(MemberContext.getMember().getTag())
+    );
+  }
 }
