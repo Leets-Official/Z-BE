@@ -74,6 +74,7 @@ public class MemberControllerImpl implements MemberController{
 
   @Override
   @GetMapping("/search")
+  @UseGuards({MemberGuard.class})
   public ResponseEntity<ApiData<MemberFindGetResponse>> getMember(@RequestParam String tag) {
     return ApiData.ok(
         this.memberService.findMembersByTag(tag)

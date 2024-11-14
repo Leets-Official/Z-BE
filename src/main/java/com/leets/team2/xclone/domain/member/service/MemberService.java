@@ -1,5 +1,6 @@
 package com.leets.team2.xclone.domain.member.service;
 
+import com.leets.team2.xclone.common.auth.MemberContext;
 import com.leets.team2.xclone.domain.member.dto.MemberDTO;
 import com.leets.team2.xclone.domain.member.dto.responses.MemberFindGetResponse;
 import com.leets.team2.xclone.domain.member.entities.Member;
@@ -58,8 +59,13 @@ public class MemberService {
 
   public MemberFindGetResponse findMembersByTag(String tag) {
     MemberFindGetResponse memberFindGetResponse = MemberFindGetResponse.empty();
+    String myTag = MemberContext.getMember().getTag();
 
-    this.memberRepository.findByTagContaining(tag).forEach(memberFindGetResponse::add);
+    this.memberRepository.findByTagContaining(tag)
+            .stream()
+            .filter(member -> !member.getTag().contentEquals(myTag))
+            .forEach(memberFindGetResponse::add);
+    log.info(memberFindGetResponse.toString());
     return memberFindGetResponse;
   }
 
