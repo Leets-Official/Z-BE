@@ -21,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/follows")
 public class FollowController {
     private final FollowService followService;
+    
     @Operation(summary = "특정 유저의 팔로워 목록 조회 API", description = "특정 유저의 팔로워 목록을 조회합니다.")
     @GetMapping("/followers")
     public ResponseEntity<ApiData<List<FollowDTO.Response>>> getFollowersByTag(@RequestParam String tag){
@@ -48,6 +49,7 @@ public class FollowController {
 
     @Operation(summary = "언팔로우 API", description = "사용자가 다른 대상을 언팔로우합니다.")
     @DeleteMapping
+    @UseGuards({MemberGuard.class})
     public ResponseEntity<ApiData<Void>> unfollow(@RequestBody FollowDTO.Save dto){
         Member currentMember = MemberContext.getMember();
         followService.unfollowUser(dto, currentMember);
