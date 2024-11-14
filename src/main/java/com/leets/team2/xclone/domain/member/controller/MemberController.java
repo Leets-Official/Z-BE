@@ -31,4 +31,7 @@ public interface MemberController {
 
   @Operation(summary = "멤버 Tag 가져오기 API", description = "로그인한 멤버의 Tag를 가져옵니다.")
   ResponseEntity<ApiData<MemberTagGetResponse>> getMemberTag();
+
+  @Operation(summary = "멤버 검색 API", description = "멤버를 검색합니다.")
+  ResponseEntity<ApiData<MemberFindGetResponse>> getMember(@RequestParam String tag);
 }

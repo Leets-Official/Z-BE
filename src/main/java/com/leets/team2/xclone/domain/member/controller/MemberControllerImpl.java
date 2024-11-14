@@ -5,8 +5,10 @@ import com.leets.team2.xclone.common.auth.MemberContext;
 import com.leets.team2.xclone.common.auth.annotations.UseGuards;
 import com.leets.team2.xclone.common.auth.guards.MemberGuard;
 import com.leets.team2.xclone.domain.member.dto.MemberDTO;
+import com.leets.team2.xclone.domain.member.dto.MemberDTO.Response;
 import com.leets.team2.xclone.domain.member.dto.requests.CheckTagDuplicationGetRequest;
 import com.leets.team2.xclone.domain.member.dto.responses.CheckTagDuplicationGetResponse;
+import com.leets.team2.xclone.domain.member.dto.responses.MemberFindGetResponse;
 import com.leets.team2.xclone.domain.member.dto.responses.MemberTagGetResponse;
 import com.leets.team2.xclone.domain.member.entities.Member;
 import com.leets.team2.xclone.domain.member.service.MemberService;
@@ -67,6 +69,14 @@ public class MemberControllerImpl implements MemberController{
   public ResponseEntity<ApiData<MemberTagGetResponse>> getMemberTag() {
     return ApiData.ok(
         new MemberTagGetResponse(MemberContext.getMember().getTag())
+    );
+  }
+
+  @Override
+  @GetMapping("/search")
+  public ResponseEntity<ApiData<MemberFindGetResponse>> getMember(@RequestParam String tag) {
+    return ApiData.ok(
+        this.memberService.findMembersByTag(tag)
     );
   }
 }
